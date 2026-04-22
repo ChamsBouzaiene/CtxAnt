@@ -1,0 +1,62 @@
+[
+  {
+    "slug": "job_hunter",
+    "emoji": "🧑‍💼",
+    "name": "Job Hunter",
+    "tagline": "Watches LinkedIn for roles matching your CV and pre-fills Easy Apply for your approval.",
+    "chips": ["Email", "Browser", "Scheduled"],
+    "example_cmd": "apply to 5 Senior React jobs in Berlin posted today",
+    "author": "CtxAnt core",
+    "featured": true
+  },
+  {
+    "slug": "deal_finder",
+    "emoji": "🛒",
+    "name": "Deal Finder",
+    "tagline": "Babysits Amazon / Target / Best Buy for prices. Pings when something drops below your threshold.",
+    "chips": ["Browser", "Scheduled"],
+    "example_cmd": "/watch https://amazon.com/... below 500",
+    "author": "CtxAnt core",
+    "featured": true
+  },
+  {
+    "slug": "inbox_triage",
+    "emoji": "📧",
+    "name": "Inbox Triage",
+    "tagline": "Sorts unread mail into need-reply / skim / archive-me. Knows your VIPs. Never touches legit senders.",
+    "chips": ["Email", "Browser"],
+    "example_cmd": "/triage now",
+    "author": "CtxAnt core",
+    "featured": true
+  },
+  {
+    "slug": "social_poster",
+    "emoji": "🐦",
+    "name": "Social Poster",
+    "tagline": "Cross-posts the same update to Twitter, LinkedIn, Threads, Bluesky in parallel tabs.",
+    "chips": ["Browser", "Multi-tab"],
+    "example_cmd": "/post \"shipping v1 today 🚀\"",
+    "author": "CtxAnt core",
+    "featured": true
+  },
+  {
+    "slug": "researcher",
+    "emoji": "🔎",
+    "name": "Researcher",
+    "tagline": "Opens the top N sources on any topic and returns a structured summary with links.",
+    "chips": ["Browser", "One-shot"],
+    "example_cmd": "/research \"GLP-1 heart outcomes\"",
+    "author": "CtxAnt core",
+    "featured": true
+  },
+  {
+    "slug": "morning_digest",
+    "emoji": "☀️",
+    "name": "Morning Digest",
+    "tagline": "Daily briefing: calendar + unread highlights + news on topics you follow.",
+    "chips": ["Email", "Browser", "Scheduled"],
+    "example_cmd": "/schedule every day at 9am",
+    "author": "CtxAnt core",
+    "featured": true
+  }
+]

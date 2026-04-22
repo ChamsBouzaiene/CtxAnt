@@ -1,0 +1,8 @@
+{
+  "version": "0.1.0",
+  "published_at": "2026-04-23",
+  "dmg_url": "https://github.com/ChamsBouzaiene/CtxAnt/releases/latest/download/CtxAnt.dmg",
+  "install_script_url": "https://ctxant.com/install.sh",
+  "release_notes_url": "https://github.com/ChamsBouzaiene/CtxAnt/releases/latest",
+  "notes": "Initial launch — hub bot + five starter agents, Chrome extension auto-pair, menu-bar app."
+}

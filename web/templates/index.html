@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Agent templates — CtxAnt</title>
+<meta name="description" content="Starter pack of AI agents for CtxAnt. Job Hunter, Deal Finder, Inbox Triage, and more. One click to deploy into your Telegram." />
+<link rel="icon" href="/assets/favicon.png" />
+<link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <a class="logo" href="/"><span class="mark">✦</span><span>CtxAnt</span></a>
+    <div class="links">
+      <a href="/">Home</a>
+      <a href="/install.html">Install</a>
+      <a href="/templates/" style="color: var(--fg);">Templates</a>
+      <a href="https://github.com/ChamsBouzaiene/CtxAnt">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" style="padding-bottom: 32px;">
+  <div class="wrap">
+    <span class="eyebrow">Agent templates</span>
+    <h1 style="font-size: clamp(32px, 5vw, 48px);">Pick an agent. Deploy it in 90 seconds.</h1>
+    <p class="lede">
+      Each template is a ready-to-run agent bot. You get a dedicated Telegram chat,
+      a short guided setup, and scheduled runs if you want them. Nothing to write from scratch.
+    </p>
+  </div>
+</header>
+
+<section style="padding-top: 0;">
+  <div class="wrap">
+
+    <div class="gallery-header">
+      <input type="search" id="q" placeholder="Filter — e.g. inbox, deal, linkedin…" />
+      <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted);">
+        <label for="hub">Your hub bot:</label>
+        <input
+          type="text"
+          id="hub"
+          placeholder="@YourHubBot"
+          style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--fg); font-size: 13px; min-width: 180px;"
+        />
+      </div>
+    </div>
+
+    <p style="font-size: 13px; color: var(--muted); margin-top: -16px; margin-bottom: 24px;">
+      <em>Tip:</em> type your hub bot's username (e.g. <code>myctxant_hub_bot</code>) above, and the
+      <strong>Deploy</strong> buttons will deep-link straight into your CtxAnt. Your browser remembers this
+      between visits — nothing gets sent anywhere.
+    </p>
+
+    <div id="gallery" class="gallery"></div>
+    <p id="empty" style="color: var(--muted); display: none; text-align: center; padding: 40px 0;">
+      No templates match your filter.
+    </p>
+
+    <div style="margin-top: 48px; padding: 24px; border: 1px dashed var(--border); border-radius: var(--radius); text-align: center;">
+      <h3 style="margin: 0 0 8px;">Have an idea for an agent?</h3>
+      <p style="margin: 0; color: var(--muted);">
+        Templates are just prompt + setup-flow JSON + memory keys. See the
+        <a href="https://github.com/ChamsBouzaiene/CtxAnt/tree/main/backend/agents.py">starter pack source</a>
+        and open a PR. Each merged template lands in this gallery on the next deploy.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 Chams Bouzaiene.</div>
+    <div>
+      <a href="/">Home</a>
+      <a href="/install.html">Install</a>
+      <a href="/privacy.html">Privacy</a>
+      <a href="https://github.com/ChamsBouzaiene/CtxAnt">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Gallery state ---------------------------------------------------------
+  let TEMPLATES = [];
+  const STORAGE_KEY = 'ctxant.hub_username';
+
+  const gallery = document.getElementById('gallery');
+  const q = document.getElementById('q');
+  const hub = document.getElementById('hub');
+  const emptyNote = document.getElementById('empty');
+
+  // Hub-username persistence ---------------------------------------------
+  hub.value = localStorage.getItem(STORAGE_KEY) || '';
+  hub.addEventListener('input', () => {
+    localStorage.setItem(STORAGE_KEY, hub.value.trim());
+    render();
+  });
+
+  function cleanHub(raw) {
+    // Accept "@name", "name", or full t.me URLs. Return bare username or ''.
+    const s = (raw || '').trim();
+    if (!s) return '';
+    const m = s.match(/(?:t\.me\/|@)?([A-Za-z0-9_]{4,})/);
+    return m ? m[1] : '';
+  }
+
+  function installUrl(slug) {
+    const u = cleanHub(hub.value);
+    if (!u) {
+      // Fallback: show a hint rather than silently deep-linking nowhere.
+      return '#needs-hub';
+    }
+    // Deep-link handled by hub_handlers.cmd_start — payload prefix "deploy_"
+    // triggers _begin_deploy for that slug.
+    return `https://t.me/${u}?start=deploy_${slug}`;
+  }
+
+  function matches(tpl, query) {
+    if (!query) return true;
+    const hay = [tpl.name, tpl.slug, tpl.tagline, ...(tpl.chips || [])].join(' ').toLowerCase();
+    return hay.includes(query.toLowerCase());
+  }
+
+  function render() {
+    const query = q.value.trim();
+    const visible = TEMPLATES.filter(t => matches(t, query));
+    emptyNote.style.display = visible.length === 0 ? 'block' : 'none';
+    gallery.innerHTML = '';
+    for (const t of visible) {
+      const card = document.createElement('div');
+      card.className = 'tpl-card';
+      const href = installUrl(t.slug);
+      const needsHub = href === '#needs-hub';
+      card.innerHTML = `
+        <div class="emoji">${t.emoji}</div>
+        <h3>${t.name}</h3>
+        <p>${t.tagline}</p>
+        <div class="chips">${(t.chips || []).map(c => `<span class="chip">${c}</span>`).join('')}</div>
+        ${t.example_cmd ? `<code style="font-size: 11px; background: var(--bg); padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border); color: var(--muted); display: block; margin-top: 8px;">${t.example_cmd}</code>` : ''}
+        <a
+          class="install"
+          href="${href}"
+          ${needsHub ? 'onclick="alert(\'Set your hub bot username up top first.\'); event.preventDefault();"' : 'target="_blank" rel="noopener"'}
+        >
+          ${needsHub ? '⚠ Set hub above to deploy' : 'Deploy to my CtxAnt →'}
+        </a>
+      `;
+      gallery.appendChild(card);
+    }
+  }
+
+  q.addEventListener('input', render);
+
+  // Fetch templates -------------------------------------------------------
+  fetch('/templates/agents.json')
+    .then(r => r.json())
+    .then(data => { TEMPLATES = data; render(); })
+    .catch(() => {
+      gallery.innerHTML = '<p style="color: var(--danger);">Failed to load templates.</p>';
+    });
+</script>
+
+</body>
+</html>

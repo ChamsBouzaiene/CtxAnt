@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privacy — CtxAnt</title>
+<meta name="description" content="CtxAnt's privacy policy. TL;DR: it's all local, there is no CtxAnt server, BYOK means your data stays between you and your AI provider." />
+<link rel="icon" href="/assets/favicon.png" />
+<link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <a class="logo" href="/"><span class="mark">✦</span><span>CtxAnt</span></a>
+    <div class="links">
+      <a href="/">Home</a>
+      <a href="/install.html">Install</a>
+      <a href="/templates/">Templates</a>
+      <a href="https://github.com/ChamsBouzaiene/CtxAnt">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<article class="prose">
+
+<h1>Privacy policy</h1>
+<p style="color: var(--muted);">Last updated: April 2026</p>
+
+<p>
+  CtxAnt is an AI sidekick that drives <em>your</em> Chrome from Telegram. It runs entirely on your machine. This page explains exactly what data we touch (spoiler: almost none).
+</p>
+
+<div class="note">
+  <strong>TL;DR.</strong> The extension talks to a local program on your own computer over
+  <code>ws://127.0.0.1:8765</code>. No CtxAnt server receives your browsing data. The only data that leaves your machine is whatever you explicitly ask the AI to do, which goes to the AI provider <em>you</em> configured (xAI or Anthropic) using <em>your</em> API key.
+</div>
+
+<h2>What the extension sees</h2>
+<p>
+  When you ask the AI to act on a page, the extension can read the active tab's DOM, take screenshots, click, type, scroll, and navigate. This only happens in response to a command you send via Telegram to your own CtxAnt bot. The extension does not observe or transmit browsing activity otherwise.
+</p>
+
+<h2>Where data goes</h2>
+<ul>
+  <li>
+    <strong>On your machine, always:</strong> the WebSocket between the extension and the CtxAnt app is local-only (<code>127.0.0.1</code>). It never leaves your computer.
+  </li>
+  <li>
+    <strong>To your AI provider, only when you run a task:</strong> the page content or screenshots needed to complete the task are sent to xAI or Anthropic directly from the CtxAnt app on your machine, authenticated with <em>your</em> API key. Their privacy terms apply.
+  </li>
+  <li>
+    <strong>To Telegram, for messaging:</strong> your chat with the bot goes through Telegram's servers the same way any other Telegram message does. CtxAnt does not run a relay.
+  </li>
+  <li>
+    <strong>Nowhere else:</strong> CtxAnt has no server, no analytics, no third-party crash reporting, and no account system.
+  </li>
+</ul>
+
+<h2>What's stored locally</h2>
+<ul>
+  <li>A pairing secret (<code>WS_SECRET</code>), generated on first run and kept in a SQLite DB at <code>~/Library/Application Support/ctxant/</code>.</li>
+  <li>Conversation history per agent, in that same DB, so each agent bot can remember context across messages.</li>
+  <li>Anything you explicitly tell an agent to remember via its setup flow (e.g. "target role: Senior React Dev"), in the <code>agent_memory</code> table.</li>
+  <li>Your <code>.env</code> file (Telegram token + AI key) at <code>~/Library/Application Support/ctxant/.env</code>, chmod 0600.</li>
+</ul>
+<p>
+  Wipe any of this at any time by quitting CtxAnt and deleting that folder.
+</p>
+
+<h2>Permissions the extension requests &amp; why</h2>
+<ul>
+  <li><code>tabs</code>, <code>activeTab</code>, <code>scripting</code> — to read and drive pages you ask the agent to operate on.</li>
+  <li><code>storage</code> — to cache the pairing secret in the extension.</li>
+  <li><code>alarms</code> — to keep the service worker alive so the local WebSocket stays connected.</li>
+  <li><code>&lt;all_urls&gt;</code> — CtxAnt has to be able to act on any site you use. The agent does <strong>not</strong> observe those sites unless you issue a command.</li>
+  <li><code>http://127.0.0.1/*</code>, <code>http://localhost/*</code> — to pair with the CtxAnt app via its local HTTP endpoint.</li>
+</ul>
+
+<h2>Children</h2>
+<p>CtxAnt is not directed at children under 13.</p>
+
+<h2>Changes</h2>
+<p>
+  If this policy changes, the updated version will be posted here and the "Last updated" date above will change. Material changes will also be announced on the <a href="https://github.com/ChamsBouzaiene/CtxAnt">GitHub repo</a>.
+</p>
+
+<h2>Contact</h2>
+<p>
+  Questions: <a href="https://github.com/ChamsBouzaiene/CtxAnt/issues">open a GitHub issue</a> or email <a href="mailto:hello@ctxant.com">hello@ctxant.com</a>.
+</p>
+
+</article>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 Chams Bouzaiene.</div>
+    <div>
+      <a href="/">Home</a>
+      <a href="/install.html">Install</a>
+      <a href="https://github.com/ChamsBouzaiene/CtxAnt">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

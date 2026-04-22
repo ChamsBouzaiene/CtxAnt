@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CtxAnt — Text your browser anything</title>
+<meta name="description" content="An AI sidekick that lives in YOUR Chrome and takes orders from Telegram. Uses your logins, your tabs, your life. Local. Private. BYOK." />
+
+<!-- Open Graph / Twitter -->
+<meta property="og:title" content="CtxAnt — Text your browser anything" />
+<meta property="og:description" content="An AI sidekick that drives YOUR Chrome from Telegram. Your logins, your tabs. No sandbox." />
+<meta property="og:url" content="https://ctxant.com" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://ctxant.com/assets/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="CtxAnt — Text your browser anything" />
+<meta name="twitter:description" content="An AI sidekick that drives YOUR Chrome from Telegram. Your logins, your tabs. No sandbox." />
+<meta name="twitter:image" content="https://ctxant.com/assets/og.png" />
+
+<link rel="icon" href="/assets/favicon.png" />
+<link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <a class="logo" href="/">
+      <span class="mark">✦</span>
+      <span>CtxAnt</span>
+    </a>
+    <div class="links">
+      <a href="#how">How it works</a>
+      <a href="#uses">Use cases</a>
+      <a href="/templates/">Templates</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://github.com/ChamsBouzaiene/CtxAnt" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Hero ─────────────────────────────────────────────────────────── -->
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">New · For Mac</span>
+    <h1>Text your browser <em>anything.</em></h1>
+    <p class="lede">
+      CtxAnt is an AI sidekick that lives in <strong>your</strong> Chrome and takes orders from Telegram.
+      Logged into your stuff. Reads your tabs. Does the boring things.
+    </p>
+    <div class="cta">
+      <a class="btn btn-primary" href="/install.html">Install for Mac — free</a>
+      <a class="btn btn-ghost" href="https://github.com/ChamsBouzaiene/CtxAnt" target="_blank" rel="noopener">★ Star on GitHub</a>
+    </div>
+    <div class="meta">
+      <span>Local-only — no CtxAnt server</span>
+      <span>BYOK (~$2/mo)</span>
+      <span>Open source</span>
+    </div>
+
+    <!-- Three demo thumbs above the fold. Drop real .gif/.mp4 files into /demos/. -->
+    <div class="demo-strip">
+      <div class="tile">
+        <div class="thumb">
+          <img src="/demos/morning-digest.gif" alt="Morning digest demo" onerror="this.replaceWith(Object.assign(document.createElement('span'), {textContent: '[morning-digest.gif]'}))" />
+        </div>
+        <h3>☀️ Morning digest</h3>
+        <p>"/morning" → 400 unread shrinks to a 3-bullet summary.</p>
+      </div>
+      <div class="tile">
+        <div class="thumb">
+          <img src="/demos/job-blast.gif" alt="Job blast demo" onerror="this.replaceWith(Object.assign(document.createElement('span'), {textContent: '[job-blast.gif]'}))" />
+        </div>
+        <h3>🧑‍💼 Job blast</h3>
+        <p>Photo of resume + "apply to 5 senior roles" → 5 Easy Apply forms fire.</p>
+      </div>
+      <div class="tile">
+        <div class="thumb">
+          <img src="/demos/price-drop.gif" alt="Price drop watcher demo" onerror="this.replaceWith(Object.assign(document.createElement('span'), {textContent: '[price-drop.gif]'}))" />
+        </div>
+        <h3>🛒 Price watcher</h3>
+        <p>"/watch &lt;url&gt; 500" → ping when it drops.</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── Positioning ──────────────────────────────────────────────────── -->
+<section id="why">
+  <div class="wrap">
+    <h2 class="section-title">Why CtxAnt?</h2>
+    <p class="section-sub">
+      Other AI agents open a fresh sandboxed browser that doesn't know you.
+      CtxAnt uses the browser you're already signed into. That's the whole pitch.
+    </p>
+    <div class="positioning">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th class="ctxant-col">CtxAnt</th>
+            <th>Cloud agents<br /><small>(Manus, Operator, etc.)</small></th>
+            <th>Dev libraries<br /><small>(Browser Use, Playwright)</small></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Uses your real session / logins</td>
+            <td class="check ctxant-col">✅</td>
+            <td class="cross">❌ sandboxed</td>
+            <td class="cross">❌</td>
+          </tr>
+          <tr>
+            <td>Install time</td>
+            <td class="ctxant-col">&lt;2 min</td>
+            <td>several minutes</td>
+            <td>hours</td>
+          </tr>
+          <tr>
+            <td>Audience</td>
+            <td class="ctxant-col">everyone</td>
+            <td>everyone</td>
+            <td>developers</td>
+          </tr>
+          <tr>
+            <td>Interface</td>
+            <td class="ctxant-col">chat you already have</td>
+            <td>web app</td>
+            <td>code</td>
+          </tr>
+          <tr>
+            <td>Ongoing cost</td>
+            <td class="ctxant-col">BYOK (~$2/mo)</td>
+            <td>$20–$200/mo</td>
+            <td>free lib, but devs</td>
+          </tr>
+          <tr>
+            <td>Privacy</td>
+            <td class="ctxant-col">local, ws://127.0.0.1</td>
+            <td>cloud</td>
+            <td>varies</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── Use cases ────────────────────────────────────────────────────── -->
+<section id="uses">
+  <div class="wrap">
+    <h2 class="section-title">What people do with it</h2>
+    <p class="section-sub">Each of these is a real starter agent. Deploy one in ~90 seconds from your hub bot.</p>
+    <div class="usecases">
+      <div class="usecase">
+        <span class="emoji">☀️</span>
+        <h3>Morning digest</h3>
+        <p>Scans your unread Gmail, surfaces the 3 that need a reply, archives the obvious noise.</p>
+        <code class="cmd">/schedule every day at 9am</code>
+      </div>
+      <div class="usecase">
+        <span class="emoji">🧑‍💼</span>
+        <h3>Job hunter</h3>
+        <p>Watches LinkedIn for roles matching your CV and pre-fills Easy Apply for your approval.</p>
+        <code class="cmd">"apply to 5 Senior React in Berlin"</code>
+      </div>
+      <div class="usecase">
+        <span class="emoji">🛒</span>
+        <h3>Deal watcher</h3>
+        <p>Babysits Amazon, Target, Best Buy for prices you care about. Pings when something drops.</p>
+        <code class="cmd">/watch &lt;url&gt; drop below 500</code>
+      </div>
+      <div class="usecase">
+        <span class="emoji">📧</span>
+        <h3>Inbox triage</h3>
+        <p>Sorts unread by need-reply / skim / archive-me. Knows your VIPs. Won't touch legit senders.</p>
+        <code class="cmd">/triage now</code>
+      </div>
+      <div class="usecase">
+        <span class="emoji">🐦</span>
+        <h3>Social poster</h3>
+        <p>Cross-posts the same thing to Twitter, LinkedIn, Threads, Bluesky in parallel tabs.</p>
+        <code class="cmd">/post "shipping v1 today 🚀"</code>
+      </div>
+      <div class="usecase">
+        <span class="emoji">🔎</span>
+        <h3>Researcher</h3>
+        <p>Opens top N sources on any topic, returns a structured summary with links.</p>
+        <code class="cmd">/research "GLP-1 heart outcomes"</code>
+      </div>
+    </div>
+    <p style="margin-top: 28px;"><a href="/templates/">Browse all templates →</a></p>
+  </div>
+</section>
+
+<!-- ── How it works ────────────────────────────────────────────────── -->
+<section id="how">
+  <div class="wrap">
+    <h2 class="section-title">Three steps to running</h2>
+    <p class="section-sub">End-to-end in under 5 minutes.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <h3>Install the Mac app</h3>
+        <p>Drag ctxant.app to Applications. Menu-bar only — no Dock clutter.</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h3>Paste two tokens</h3>
+        <p>A Telegram bot token (BotFather, 20 seconds) and your xAI or Anthropic API key.</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h3>Text your bot</h3>
+        <p>Open Chrome, install the one-click extension, and start messaging. Your browser does the rest.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ─────────────────────────────────────────────────────────── -->
+<section id="faq">
+  <div class="wrap" style="max-width: 900px;">
+    <h2 class="section-title">Questions people always ask</h2>
+    <div class="faq">
+      <details>
+        <summary>Is it actually private?</summary>
+        <p>
+          Yes. CtxAnt runs entirely on your machine. The Chrome extension talks to the CtxAnt app over <code>ws://127.0.0.1</code> — nothing goes to a CtxAnt-owned server, because there is no CtxAnt-owned server. Your page content is only sent to the AI provider <em>you</em> chose (xAI or Anthropic), authenticated with <em>your</em> API key. <a href="/privacy.html">Full privacy policy.</a>
+        </p>
+      </details>
+      <details>
+        <summary>What does it cost?</summary>
+        <p>
+          BYOK — you pay the AI provider directly, not us. On xAI Grok the average user spends under $2/month running 5 macros/day. If you already pay for Claude, it works on that too. No CtxAnt subscription, no trial expiration, no credit card.
+        </p>
+      </details>
+      <details>
+        <summary>Can it see my banking / medical / personal stuff?</summary>
+        <p>
+          Only when you ask it to. CtxAnt only acts on a tab when a command comes in from your own Telegram bot. The upside of that is: it's <em>already logged into your banking</em>, so the answer to "what did I spend this month?" takes 3 seconds and a screenshot, not a finance migration. Data never leaves your machine except via your own AI provider's API.
+        </p>
+      </details>
+      <details>
+        <summary>Why Telegram?</summary>
+        <p>
+          It's the only chat app with a free, programmable bot layer, no approval process, and instant cross-device delivery. You already have Telegram open. You already know how to use it. And because every agent gets its own bot, deploying a new agent feels like hiring a coworker — their messages show up in their own chat bubble in your sidebar.
+        </p>
+      </details>
+      <details>
+        <summary>Why BYOK instead of charging per-use?</summary>
+        <p>
+          Three reasons. (1) Your data stays between you and your AI provider — we never see a prompt. (2) Costs scale with <em>your</em> usage, not our pricing tiers. (3) We don't have to touch credit cards, which means we can ship faster and can't be held hostage by Stripe.
+        </p>
+      </details>
+      <details>
+        <summary>Windows? Linux? iPhone?</summary>
+        <p>
+          Mac first. Windows and Linux are coming — most of the code is portable, but the installer, menu-bar UI, and onboarding are Mac-specific. Join the waitlist on the <a href="https://github.com/ChamsBouzaiene/CtxAnt">repo</a>. iPhone: not planned — iOS can't drive Safari the way Chrome Extensions drive Chrome, which is the whole point.
+        </p>
+      </details>
+      <details>
+        <summary>How is this different from Claude "Computer Use" or ChatGPT Operator?</summary>
+        <p>
+          Those run the AI in <em>their</em> sandbox, controlling <em>their</em> browser. They don't know your Gmail is already open or that you're logged into LinkedIn, so every task starts with 20 seconds of authentication theatre. CtxAnt skips all that because the browser <em>is yours</em>. You never paste a password into the AI, you never share a session, you never wait on a fresh login.
+        </p>
+      </details>
+      <details>
+        <summary>What if the AI does something dumb?</summary>
+        <p>
+          You're watching a live Chrome window — so you see everything. For destructive actions we can require explicit approval before submit; that's configurable per-agent. And the menu bar always has a one-click <em>Stop</em>.
+        </p>
+      </details>
+      <details>
+        <summary>Is it open source?</summary>
+        <p>
+          Yes. <a href="https://github.com/ChamsBouzaiene/CtxAnt">Code on GitHub.</a> We'd rather you read the ten files that run on your machine than take our word for it.
+        </p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ─────────────────────────────────────────────────────────── -->
+<section>
+  <div class="wrap">
+    <div class="cta-strip">
+      <h2>Stop clicking. Start texting.</h2>
+      <p>Two-minute install. Your first agent running in five.</p>
+      <a class="btn btn-primary" href="/install.html">Install CtxAnt for Mac</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 Chams Bouzaiene. Built by humans who got tired of typing.</div>
+    <div>
+      <a href="/privacy.html">Privacy</a>
+      <a href="https://github.com/ChamsBouzaiene/CtxAnt">GitHub</a>
+      <a href="https://twitter.com/ctxantapp">Twitter</a>
+      <a href="mailto:hello@ctxant.com">Contact</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
