@@ -12,20 +12,34 @@ let status = "disconnected";
 
 async function fetchSecret() {
   try {
-    const res = await fetch(PAIR_URL, { method: "GET" });
-    if (!res.ok) return null;
+    const res = await fetch(PAIR_URL, {
+      method: "GET",
+      cache: "no-store",
+      credentials: "omit",
+    });
+    if (!res.ok) {
+      return {
+        secret: null,
+        error: res.status === 403
+          ? "Pairing rejected by the local app. Check the configured extension ID allowlist."
+          : "Could not reach the local pairing endpoint.",
+      };
+    }
     const data = await res.json();
-    return data.secret || null;
+    if (typeof data.secret !== "string" || !data.secret.trim()) {
+      return { secret: null, error: "The local app returned an invalid pairing secret." };
+    }
+    return { secret: data.secret, error: null };
   } catch {
-    return null;
+    return { secret: null, error: "The CtxAnt Mac app does not appear to be running on this machine." };
   }
 }
 
 // ── Status management ────────────────────────────────────────────────────────
 
-function setStatus(s) {
+function setStatus(s, detail) {
   status = s;
-  chrome.storage.session.set({ wsStatus: s });
+  chrome.storage.session.set({ wsStatus: s, wsStatusDetail: detail || "" });
 }
 
 // ── WebSocket connection ─────────────────────────────────────────────────────
@@ -35,13 +49,14 @@ async function connect() {
     return;
   }
 
-  setStatus("connecting");
+  setStatus("connecting", "Trying to reach the localhost pairing and WebSocket endpoints now.");
 
   if (!wsSecret) {
-    wsSecret = await fetchSecret();
+    const pair = await fetchSecret();
+    wsSecret = pair.secret;
     if (!wsSecret) {
       console.log("[CtxAnt] Could not fetch pairing secret — backend not running?");
-      setStatus("disconnected");
+      setStatus("disconnected", pair.error);
       setTimeout(connect, reconnectDelay);
       reconnectDelay = Math.min(reconnectDelay * 2, 30000);
       return;
@@ -52,7 +67,7 @@ async function connect() {
 
   ws.onopen = () => {
     ws.send(JSON.stringify({ type: "auth", token: wsSecret }));
-    setStatus("connected");
+    setStatus("connected", "The extension is paired with the local CtxAnt app and ready for user-triggered browser tasks.");
     reconnectDelay = 1000;
     console.log("[CtxAnt] Connected to backend");
   };
@@ -68,11 +83,15 @@ async function connect() {
   };
 
   ws.onclose = (ev) => {
-    setStatus("disconnected");
+    let detail = "Start the CtxAnt Mac app and keep Chrome open. Reload the extension if you recently changed the local pairing secret.";
     // 1008 = auth failure → invalidate cached secret so we re-pair
     if (ev && ev.code === 1008) {
       wsSecret = null;
+      detail = "Authentication with the local app failed. The extension will try to fetch a fresh pairing secret.";
+    } else if (ev && ev.code === 1013) {
+      detail = ev.reason || "Another Chrome profile is already paired with CtxAnt.";
     }
+    setStatus("disconnected", detail);
     console.log(`[CtxAnt] Disconnected. Reconnecting in ${reconnectDelay}ms...`);
     setTimeout(connect, reconnectDelay);
     reconnectDelay = Math.min(reconnectDelay * 2, 30000);
@@ -170,17 +189,6 @@ async function handleCommand(cmd) {
           args: [],
         });
         sendResult(id, result[0].result);
-        break;
-      }
-
-      case "evaluate": {
-        const tab = await getActiveTab();
-        const result = await chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          func: contentEvaluate,
-          args: [cmd.code],
-        });
-        sendResult(id, { result: result[0].result });
         break;
       }
 
@@ -303,11 +311,6 @@ function contentGetContent() {
     url: location.href,
     text: document.body ? document.body.innerText.slice(0, 20000) : "",
   };
-}
-
-function contentEvaluate(code) {
-  // eslint-disable-next-line no-new-func
-  return new Function(code)();
 }
 
 // ── Keepalive: prevent MV3 service worker from being killed ──────────────────

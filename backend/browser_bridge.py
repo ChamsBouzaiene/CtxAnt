@@ -15,6 +15,14 @@ logger = logging.getLogger(__name__)
 # The single connected extension WebSocket (only one extension at a time)
 _connection: Optional[WebSocketServerProtocol] = None
 _pending: dict[str, asyncio.Future] = {}
+_last_status: dict[str, str | bool | None] = {
+    "connected": False,
+    "message": "No browser session connected.",
+}
+
+
+def status_snapshot() -> dict[str, str | bool | None]:
+    return dict(_last_status)
 
 
 async def _handler(ws: WebSocketServerProtocol):
@@ -34,7 +42,15 @@ async def _handler(ws: WebSocketServerProtocol):
         logger.warning("Extension connection rejected: bad auth token")
         return
 
+    if _connection is not None and _connection is not ws and not _connection.closed:
+        reason = "Another Chrome profile is already paired with CtxAnt."
+        _last_status.update({"connected": True, "message": reason})
+        logger.warning("Rejected secondary extension connection while another browser session is active")
+        await ws.close(1013, reason)
+        return
+
     _connection = ws
+    _last_status.update({"connected": True, "message": "Browser extension connected."})
     logger.info("Browser extension connected")
 
     try:
@@ -54,6 +70,11 @@ async def _handler(ws: WebSocketServerProtocol):
     finally:
         if _connection is ws:
             _connection = None
+            for fut in list(_pending.values()):
+                if not fut.done():
+                    fut.set_result({"error": "Browser extension disconnected"})
+            _pending.clear()
+            _last_status.update({"connected": False, "message": "Browser extension disconnected."})
         logger.info("Browser extension disconnected")
 
 

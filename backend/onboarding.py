@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 
 # ── HTML/JS for the wizard ────────────────────────────────────────────────────
 
-_HTML = r"""
+_HTML_TEMPLATE = r"""
 <!DOCTYPE html>
 <html>
 <head>
@@ -190,14 +190,7 @@ _HTML = r"""
   <h1>Almost done 🎉</h1>
   <p class="muted">Last step: install the Chrome extension so your bot can drive your browser.</p>
 
-  <h2>Install the extension</h2>
-  <ol>
-    <li>Open <b>chrome://extensions</b> in Chrome.</li>
-    <li>Toggle <b>Developer mode</b> (top right) ON.</li>
-    <li>Click <b>Load unpacked</b>.</li>
-    <li>Select the <code>extension/</code> folder from the CtxAnt install.</li>
-    <li>The extension will auto-pair with the backend on localhost — no config needed.</li>
-  </ol>
+  __EXTENSION_INSTALL_BLOCK__
 
   <p class="muted">Once the extension is loaded, open your hub bot in Telegram and send <code>/start</code>. It'll walk you through deploying your first agent.</p>
 
@@ -380,6 +373,34 @@ _HTML = r"""
 """
 
 
+def _extension_install_block() -> str:
+    if config.CHROME_WEB_STORE_URL:
+        return f"""
+  <h2>Install from the Chrome Web Store</h2>
+  <ol>
+    <li>Open the Chrome Web Store listing.</li>
+    <li>Click <b>Add to Chrome</b>.</li>
+    <li>Keep Chrome open while the extension pairs with the local backend on <code>127.0.0.1</code>.</li>
+  </ol>
+  <p><a href="{config.CHROME_WEB_STORE_URL}" target="_blank" rel="noreferrer">Open the Chrome Web Store listing →</a></p>
+  <p class="hint">Developer fallback: if you're testing before the listing is live, you can still load the bundled <code>extension/</code> folder unpacked from <code>chrome://extensions</code>.</p>
+"""
+    return """
+  <h2>Install the extension</h2>
+  <ol>
+    <li>Open <b>chrome://extensions</b> in Chrome.</li>
+    <li>Toggle <b>Developer mode</b> (top right) ON.</li>
+    <li>Click <b>Load unpacked</b>.</li>
+    <li>Select the <code>extension/</code> folder from the CtxAnt install.</li>
+    <li>The extension will auto-pair with the backend on localhost — no config needed.</li>
+  </ol>
+  <p class="hint">This unpacked path is the pre-approval and developer fallback. Once the Chrome Web Store listing is live, production installs should use that instead.</p>
+"""
+
+
+_HTML = _HTML_TEMPLATE.replace("__EXTENSION_INSTALL_BLOCK__", _extension_install_block())
+
+
 # ── Python-side API exposed to the JS ─────────────────────────────────────────
 
 class _Api:
@@ -498,6 +519,13 @@ def _write_env(*, token: str, provider: str, api_key: str, user_id: str) -> None
         "# ── WebSocket bridge (auto-paired with the Chrome extension) ───────",
         f"WS_SECRET={ws_secret}",
         "WS_PORT=8765",
+        f"CHROME_EXTENSION_ID={config.CHROME_EXTENSION_ID}",
+        f"CHROME_EXTENSION_DEV_IDS={','.join(config.CHROME_EXTENSION_DEV_IDS)}",
+        (
+            f"CHROME_EXTENSION_ALLOW_ANY_DEV_ORIGIN="
+            f"{'1' if (config.CHROME_EXTENSION_ALLOW_ANY_DEV_ORIGIN or (not config.CHROME_EXTENSION_ID and not config.CHROME_EXTENSION_DEV_IDS and not config.CHROME_WEB_STORE_URL)) else '0'}"
+        ),
+        f"CHROME_WEB_STORE_URL={config.CHROME_WEB_STORE_URL}",
         "",
     ]
     path.write_text("\n".join(lines), encoding="utf-8")

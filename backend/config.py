@@ -57,6 +57,29 @@ TELEGRAM_ALLOWED_USERS = [
 
 WS_SECRET = os.getenv("WS_SECRET", "change-me")
 WS_PORT = int(os.getenv("WS_PORT", "8765"))
+CHROME_EXTENSION_ID = os.getenv("CHROME_EXTENSION_ID", "").strip()
+CHROME_EXTENSION_DEV_IDS = [
+    ext_id.strip()
+    for ext_id in os.getenv("CHROME_EXTENSION_DEV_IDS", "").split(",")
+    if ext_id.strip()
+]
+CHROME_EXTENSION_ALLOW_ANY_DEV_ORIGIN = os.getenv("CHROME_EXTENSION_ALLOW_ANY_DEV_ORIGIN", "0") == "1"
+CHROME_WEB_STORE_URL = os.getenv("CHROME_WEB_STORE_URL", "").strip()
+
+
+def allowed_extension_origins() -> set[str]:
+    ids = set(CHROME_EXTENSION_DEV_IDS)
+    if CHROME_EXTENSION_ID:
+        ids.add(CHROME_EXTENSION_ID)
+    return {f"chrome-extension://{ext_id}" for ext_id in ids}
+
+
+def is_extension_origin_allowed(origin: str) -> bool:
+    if origin in allowed_extension_origins():
+        return True
+    if CHROME_EXTENSION_ALLOW_ANY_DEV_ORIGIN and origin.startswith("chrome-extension://"):
+        return True
+    return False
 
 
 def is_configured() -> bool:
@@ -64,13 +87,26 @@ def is_configured() -> bool:
 
     Used by ctxant_app.py to decide whether to launch the onboarding wizard.
     """
-    has_token = bool(os.getenv("TELEGRAM_BOT_TOKEN", ""))
     provider = os.getenv("AI_PROVIDER", "grok").lower()
     if provider == "claude":
         has_key = bool(os.getenv("ANTHROPIC_API_KEY", ""))
     else:
         has_key = bool(os.getenv("XAI_API_KEY", ""))
-    return has_token and has_key
+    if not has_key:
+        return False
+
+    has_token = bool(os.getenv("TELEGRAM_BOT_TOKEN", ""))
+    if has_token:
+        return True
+
+    try:
+        import db
+
+        db.conn()
+        row = db.query_one("SELECT id FROM bots WHERE role='hub' LIMIT 1")
+        return row is not None
+    except Exception:
+        return False
 
 
 def env_path() -> Path:

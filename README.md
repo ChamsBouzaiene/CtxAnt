@@ -1,6 +1,6 @@
 # CtxAnt
 
-> **Text your browser anything.** CtxAnt is an AI sidekick that lives in *your* Chrome and takes orders from Telegram — logged into your accounts, reading your tabs, doing the boring things.
+> **Text any agent. Or build your own in 30 seconds.** CtxAnt is an AI sidekick that lives in *your* Chrome and takes orders from Telegram — logged into your accounts, reading your tabs, doing the boring things.
 
 Unlike cloud agents that open a sandboxed, cookie-free browser that knows nothing about you, CtxAnt drives the Chrome you're already signed into. You chat with it from Telegram. Everything runs on your Mac; the only data that leaves your machine is the prompt you send to your AI provider.
 
@@ -10,8 +10,9 @@ Unlike cloud agents that open a sandboxed, cookie-free browser that knows nothin
 
 A Mac menu-bar app that runs:
 
+- **🔨 Build your own agents.** One bot per workflow. Need a **HubSpot** agent that follows up on warm leads every morning? A **LinkedIn** agent that saves new Sales Navigator hits to a sheet? An **Instagram** agent that reposts your best tweets at 6pm? Tap "➕ Build your own" in the hub, describe the task, pair a new Telegram bot — done. Each custom agent has its own memory, its own schedule, its own conversation history. Deploy as many as you want. ([See how](#build-your-own))
 - **One hub bot** (your control bot in Telegram) and **N agent bots** — each a separate Telegram bot bound to one specific job.
-- A **starter pack of 6 guided agents**: Job Hunter, Deal Finder, Inbox Triage, Social Poster, Researcher, Morning Digest. Each one walks you through a setup flow (no prompt engineering needed) and remembers your answers.
+- A **starter pack of 12 guided agents**: Job Hunter, Deal Finder, Inbox Triage, Morning Digest, Researcher, Social Poster, Lead Tracker, Meeting Prep, Support Triage, Invoice Collector, Marketplace Monitor, and Web Runner. Each walks you through a setup flow (no prompt engineering needed) and remembers your answers.
 - **Schedules** — any agent can run on a cron you define in its chat (`/schedule every day at 9am`). Scheduled runs DM you from the agent bot that owns the job.
 - **Queued UX** — one Chrome, one queue. If agent B wants the browser while agent A is using it, B's bot immediately tells you "⏳ queued behind Job Hunter" and runs when the lock frees.
 - **Usage tracking** — `/usage` in the hub shows tokens and $ spent per agent.
@@ -26,7 +27,7 @@ A Mac menu-bar app that runs:
 3. Launch it. A setup window opens and walks you through:
    - Creating your hub bot in [@BotFather](https://t.me/BotFather) and pasting the token.
    - Picking your AI provider (Grok or Claude) and pasting the API key.
-   - Installing the Chrome extension (Load Unpacked from `chrome://extensions`).
+   - Installing the Chrome extension (Chrome Web Store in production; `Load unpacked` from `chrome://extensions` as the current fallback/dev path).
 4. A 🪄 icon appears in your menu bar. Open your hub bot in Telegram and send `/start`.
 
 The wizard writes everything to `~/Library/Application Support/ctxant/.env` (owner-only permissions). You never touch a config file.
@@ -37,7 +38,7 @@ The wizard writes everything to `~/Library/Application Support/ctxant/.env` (own
 
 Once the app is running and Chrome is loaded:
 
-1. In your hub bot, send `/start`. You get an inline keyboard with the 6 starter agents.
+1. In your hub bot, send `/start`. You get an inline keyboard with the full starter pack plus the build-your-own entry.
 2. Tap one (e.g. **🧑‍💼 Job Hunter**). The hub walks you through the BotFather ritual for that specific agent — creating a second bot that *is* the Job Hunter.
 3. Paste the new bot's token back into the hub chat. The hub spins up the agent bot live.
 4. Open the new agent bot in Telegram. Send `/start`. It asks 3–5 guided setup questions (role, cities, CV, cadence…) and stores your answers.
@@ -45,13 +46,31 @@ Once the app is running and Chrome is loaded:
 
 Deploy as many agents as you want — each gets its own Telegram bot, its own chat, its own memory.
 
+## Build your own
+
+The 12 starter agents are templates. For everything else, build one:
+
+1. In the hub, send `/start` and tap **➕ Build your own agent** (the first button).
+2. Answer 5 quick questions:
+   - **Nickname** — what to call this agent (e.g. `HubSpot`, `LinkedIn`, `Content Scheduler`).
+   - **Emoji** — one character, or skip for 🤖.
+   - **One-line description** — shows up in the picker.
+   - **Standing task** — the actual thing it does. Be specific: URLs, steps, constraints, output format. Example: *"Open https://app.hubspot.com/contacts, filter to deals in stage 'Warm lead' that haven't been contacted in 5+ days, list the top 5 with name + last-activity date."*
+   - **Standing preferences** — constants that apply to every run (tone, language, *"pause if you hit a login wall"*, etc.).
+3. The hub walks you through BotFather to create a Telegram bot for this new agent.
+4. Paste the token back. Your new bot is live — text it, `/run` it, `/schedule` it, same as any starter agent.
+
+Each custom agent is fully isolated: its own memory, schedules, conversation history. Two users can both have a "HubSpot" agent without clashing; one user can have HubSpot + LinkedIn + Instagram running side-by-side, all with their own standing tasks and schedules.
+
+> Shipping soon: a "plan then approve" mode (the agent previews the steps before executing, you approve per-run) and **agent sharing** (publish a recipe as JSON, others install with one click).
+
 ## Commands
 
 ### Hub bot
 
 | Command | What it does |
 |---|---|
-| `/start` | Pick an agent to deploy |
+| `/start` | Pick a starter agent or build your own |
 | `/agents` | List your deployed bots |
 | `/deploy <slug>` | Start the deploy wizard for an agent |
 | `/undeploy <slug>` | Stop and remove an agent bot (memory preserved) |
@@ -118,7 +137,7 @@ ctxant/
 
 | Category | Tools |
 |---|---|
-| **Browser** | screenshot · navigate · click · type · scroll · get_page_content · evaluate_js · list_tabs · switch_tab · new_tab · close_tab |
+| **Browser** | screenshot · navigate · click · type · scroll · get_page_content · list_tabs · switch_tab · new_tab · close_tab |
 | **Machine** | run_command · read_file · write_file · list_directory · get_working_directory |
 
 Vision input: send an agent a photo and it'll reason over the image (e.g. CV photo → Job Hunter fills an application).
@@ -133,4 +152,4 @@ MIT — see [LICENSE](./LICENSE).
 
 ---
 
-Built by [Chams Bouzaiene](https://github.com/ChamsBouzaiene).
+Built by [Bouzaiene Chamseddine](https://github.com/ChamsBouzaiene).

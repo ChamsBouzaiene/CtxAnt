@@ -41,7 +41,12 @@ def browser_busy() -> bool:
 
 # Keep at most this many turns before pruning.
 MAX_HISTORY_TURNS = 40
-MAX_TOOL_ITERATIONS = 20
+# Cap on tool-call rounds inside a single user turn. Bumped from 20 → 50:
+# multi-site sweeps (scan 5–10 subreddits, summarise each) routinely need
+# ~5 tool calls per site, so 20 was bailing partway through. 50 covers most
+# realistic "go visit N pages and report back" jobs without exploding cost
+# (the model still stops as soon as it has the answer).
+MAX_TOOL_ITERATIONS = 50
 
 CLAUDE_MODEL = "claude-sonnet-4-6"
 GROK_VISION_MODEL = "grok-2-vision-latest"
@@ -120,18 +125,6 @@ TOOLS_OPENAI = [
             "name": "browser_get_page_content",
             "description": "Get the visible text content, title, and URL of the current tab.",
             "parameters": {"type": "object", "properties": {}, "required": []},
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "browser_evaluate_js",
-            "description": "Run JavaScript in the current tab and return the result.",
-            "parameters": {
-                "type": "object",
-                "properties": {"code": {"type": "string", "description": "JS expression to evaluate (must be an expression, not statements)"}},
-                "required": ["code"],
-            },
         },
     },
     {
@@ -321,10 +314,6 @@ async def _execute_tool(name: str, args: dict) -> tuple[Any, bytes | None]:
         result = await browser_bridge.send_command("get_content")
         return result, None
 
-    elif name == "browser_evaluate_js":
-        result = await browser_bridge.send_command("evaluate", code=args["code"])
-        return result, None
-
     elif name == "browser_list_tabs":
         result = await browser_bridge.send_command("list_tabs")
         return result, None
@@ -505,7 +494,11 @@ async def _run_claude(
 
         response = await client.messages.create(
             model=CLAUDE_MODEL,
-            max_tokens=4096,
+            # Bumped from 4096 → 8192 so long, structured answers (e.g. "list
+            # 10 candidates with summary + reasoning") don't get truncated
+            # mid-word. Sonnet supports up to 64K output tokens; 8K is the
+            # sweet spot between "won't truncate" and "won't waste".
+            max_tokens=8192,
             system=system,
             tools=TOOLS_ANTHROPIC,
             messages=history,

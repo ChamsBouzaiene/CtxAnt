@@ -5,70 +5,176 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CtxAnt</title>
   <style>
-    :root { color-scheme: light dark; }
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fb;
+      --surface: rgba(255, 255, 255, 0.96);
+      --surface-soft: rgba(255, 255, 255, 0.82);
+      --text: #151922;
+      --muted: #6d7483;
+      --line: rgba(21, 25, 34, 0.08);
+      --shadow: 0 14px 34px rgba(18, 24, 36, 0.08);
+      --success: #1f8f5f;
+      --warning: #b7791f;
+      --danger: #c23b43;
+    }
     body {
-      width: 280px;
-      padding: 16px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      width: 320px;
+      min-height: 320px;
+      padding: 18px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
       font-size: 14px;
       margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(76, 132, 248, 0.12), transparent 10rem),
+        linear-gradient(180deg, #fbfcfe 0%, #f5f7fa 100%);
+      -webkit-font-smoothing: antialiased;
     }
+
+    .shell {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: block;
+    }
+
+    .brand strong {
+      display: block;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      font-size: 18px;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+    }
+
+    .brand small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .status-card {
+      border: 1px solid var(--line);
+      background: var(--surface-soft);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
     .status-row {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
+      gap: 10px;
     }
+
     .dot {
-      width: 10px;
-      height: 10px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       flex-shrink: 0;
     }
-    .dot.connected    { background: #22c55e; }
-    .dot.connecting   { background: #f59e0b; }
-    .dot.disconnected { background: #ef4444; }
-    #status-text { font-size: 13px; opacity: 0.8; }
-    .hint {
-      font-size: 11px;
-      opacity: 0.65;
-      line-height: 1.5;
-      border-top: 1px solid currentColor;
-      border-top-color: rgba(128,128,128,0.25);
-      padding-top: 10px;
-      margin-top: 4px;
+    .dot.connected    { background: var(--success); }
+    .dot.connecting   { background: var(--warning); }
+    .dot.disconnected { background: var(--danger); }
+
+    #status-text {
+      font-weight: 600;
+      font-size: 14px;
     }
-    .hint a { color: inherit; }
+
+    #status-detail {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
     .row-actions {
       display: flex;
-      gap: 6px;
-      margin-top: 10px;
+      gap: 8px;
+      margin-top: 16px;
     }
+
     .row-actions a {
       flex: 1;
       text-align: center;
-      font-size: 11px;
       text-decoration: none;
-      padding: 6px 8px;
-      border-radius: 6px;
-      border: 1px solid rgba(128,128,128,0.3);
-      color: inherit;
+      min-height: 40px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
-    .row-actions a:hover { background: rgba(128,128,128,0.1); }
+
+    .row-actions a.primary {
+      background: #17191d;
+      color: #fff;
+    }
+
+    .row-actions a.secondary {
+      background: rgba(255, 255, 255, 0.82);
+      border-color: var(--line);
+    }
+
+    .row-actions a:hover {
+      transform: translateY(-1px);
+    }
+
+    .hint {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
   </style>
 </head>
 <body>
-  <div class="status-row">
-    <div class="dot disconnected" id="dot"></div>
-    <span id="status-text">Checking…</span>
-  </div>
-  <div class="row-actions">
-    <a href="http://127.0.0.1:8766/dashboard" target="_blank">Open dashboard</a>
-    <a href="https://ctxant.com/help" target="_blank">Help</a>
-  </div>
-  <div class="hint">
-    CtxAnt pairs automatically with the Mac app running on your machine. If this stays
-    red, make sure the menu-bar app is running.
+  <div class="shell">
+    <div class="brand">
+      <img class="brand-mark" src="icons/icon-48.png" alt="" />
+      <div>
+        <strong>CtxAnt</strong>
+        <small>Chrome companion</small>
+      </div>
+    </div>
+
+    <div class="status-card">
+      <div class="status-row">
+        <div class="dot disconnected" id="dot"></div>
+        <span id="status-text">Checking connection…</span>
+      </div>
+      <div id="status-detail">Looking for the CtxAnt Mac app on localhost.</div>
+    </div>
+
+    <div class="row-actions">
+      <a class="primary" href="http://127.0.0.1:8766/dashboard" target="_blank" rel="noopener">Open dashboard</a>
+      <a class="secondary" href="https://github.com/ChamsBouzaiene/CtxAnt/issues" target="_blank" rel="noopener">Support</a>
+    </div>
+
+    <div class="hint">
+      CtxAnt only acts when you trigger a task from the companion Mac app and your Telegram bot. The extension does not monitor your browsing passively.
+    </div>
   </div>
   <script src="popup.js"></script>
 </body>

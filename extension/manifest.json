@@ -3,8 +3,8 @@
   "name": "CtxAnt — Text your browser anything",
   "short_name": "CtxAnt",
   "version": "1.0.0",
-  "author": "Chams Bouzaiene",
-  "description": "Drive your real Chrome from Telegram. The AI uses your logins, your tabs, your life — no sandbox, no new window.",
+  "author": "Bouzaiene Chamseddine",
+  "description": "Drive your real Chrome from Telegram through the CtxAnt Mac app. Local pairing, user-triggered browser automation, no hosted browser sandbox.",
 
   "permissions": [
     "tabs",
@@ -40,14 +40,5 @@
       "32": "icons/icon-32.png",
       "48": "icons/icon-48.png"
     }
-  },
-
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"],
-      "run_at": "document_idle",
-      "all_frames": false
-    }
-  ]
+  }
 }

@@ -105,7 +105,14 @@ async def _run_single_bot():
     """Legacy single-bot path (pre-multi-bot). Kept behind CTXANT_MULTI_BOT=0."""
     import telegram_handler
 
-    app = telegram_handler.build_application(TELEGRAM_BOT_TOKEN)
+    token = os.getenv("TELEGRAM_BOT_TOKEN", TELEGRAM_BOT_TOKEN)
+    if not token:
+        raise RuntimeError(
+            "Legacy single-bot mode requires TELEGRAM_BOT_TOKEN in .env. "
+            "Use multi-bot mode to boot from the persisted bots table."
+        )
+
+    app = telegram_handler.build_application(token)
     scheduler.init(run_macro_cb=telegram_handler.run_macro_for_schedule)
 
     await app.initialize()
@@ -126,11 +133,6 @@ async def _run_single_bot():
 
 
 async def main():
-    if not TELEGRAM_BOT_TOKEN:
-        raise RuntimeError(
-            "TELEGRAM_BOT_TOKEN is not set in .env (used to seed the hub bot)."
-        )
-
     # Route unhandled asyncio task errors through the crash reporter so a
     # dying scheduled run or websocket callback files a crash.log entry and
     # DMs the owner, instead of python-telegram-bot's "Task exception was
@@ -139,6 +141,20 @@ async def main():
 
     # Init DB (creates file + schema on first run) and generate WS secret.
     db.conn()
+    hub_row = db.query_one("SELECT id FROM bots WHERE role='hub' LIMIT 1")
+    env_token = os.getenv("TELEGRAM_BOT_TOKEN", TELEGRAM_BOT_TOKEN)
+    if _MULTI_BOT:
+        if not hub_row and not env_token:
+            raise RuntimeError(
+                "No persisted hub bot was found and TELEGRAM_BOT_TOKEN is not set in .env. "
+                "This looks like a first run or a broken install: paste a hub token in .env or rerun onboarding."
+            )
+    elif not env_token:
+        raise RuntimeError(
+            "Legacy single-bot mode requires TELEGRAM_BOT_TOKEN in .env. "
+            "Use multi-bot mode if you want to boot from the persisted bots table."
+        )
+
     secret = pairing.get_or_create_secret()
     logger.info(f"AI provider: {AI_PROVIDER.upper()}")
     logger.info(f"WS_SECRET ready (auto-paired by extension) — {secret[:6]}…")

@@ -151,7 +151,8 @@ pip install -r requirements.txt
 
 # 2. create a .env (see .env.example for the full list)
 cp ../.env.example ../.env
-# edit .env — set TELEGRAM_BOT_TOKEN, your AI key, and TELEGRAM_ALLOWED_USERS
+# edit .env — set TELEGRAM_BOT_TOKEN, your AI key, TELEGRAM_ALLOWED_USERS,
+# and either CHROME_EXTENSION_DEV_IDS or CHROME_EXTENSION_ALLOW_ANY_DEV_ORIGIN=1
 
 # 3. run
 python main.py
@@ -231,7 +232,7 @@ An agent is a row in the `agents` table with:
 - `agent_memory` — per-`(chat_id, agent_slug)` key-value store filled in by the setup flow.
 - `render_prompt(chat_id, slug)` in `agents.py` fills the template from memory (missing keys render as `(not set)` via `_SafeDict`).
 
-The starter pack (6 agents) is seeded by `agents.seed_starter_pack()` on every startup (idempotent).
+The starter pack (12 agents) is seeded by `agents.seed_starter_pack()` on every startup (idempotent).
 
 ### Universal behaviours (enforced in `claude_agent.process_message`)
 
@@ -248,7 +249,7 @@ Manual smoke tests for the multi-bot runtime. Run `python main.py` (or launch `c
 
 ### 1. Hub `/start` picker
 
-- Send `/start` to the hub → you should get an intro message with a 2-column inline keyboard listing all 6 starter agents.
+- Send `/start` to the hub → you should get an intro message with a 2-column inline keyboard listing the starter pack plus the build-your-own entry.
 - Agents you've already deployed show a ✅; undeployed ones show their emoji.
 - Tap an undeployed agent → hub asks you to do the BotFather ritual.
 
@@ -532,7 +533,7 @@ Two distribution channels: the **Chrome Web Store** (users click "Add to Chrome"
 **First-time prep (do once):**
 
 1. Pay the $5 Chrome developer registration fee at https://chrome.google.com/webstore/devconsole.
-2. Host [`extension/privacy.html`](./extension/privacy.html) at a public URL (e.g. `https://ctxant.com/privacy`). GitHub Pages or Vercel both work. The URL goes into the dashboard's **Privacy policy** field.
+2. Host [`extension/privacy.html`](./extension/privacy.html) at a public URL (e.g. `https://ctxant.com/privacy.html`). GitHub Pages or Vercel both work. The URL goes into the dashboard's **Privacy policy** field.
 3. Capture 1–5 screenshots at **1280×800** PNG and drop them into `extension/store-assets/` as `screenshot-1.png`, etc. Suggested shots are listed in that folder's README.
 4. (Optional but boosts discovery) Produce `promo-tile-440x280.png` and save it next to the screenshots.
 

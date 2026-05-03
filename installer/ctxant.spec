@@ -15,6 +15,7 @@ PROJECT_ROOT = Path(os.path.abspath(os.path.join(SPECPATH, ".."))).resolve()
 BACKEND_DIR = PROJECT_ROOT / "backend"
 EXTENSION_DIR = PROJECT_ROOT / "extension"
 ASSETS_DIR = BACKEND_DIR / "assets"
+WEB_TEMPLATES_DIR = PROJECT_ROOT / "web" / "templates"
 
 # Read __version__ without importing backend/ (which pulls in dotenv and
 # sqlite side-effects we don't want at spec-parse time). A 3-line module
@@ -33,6 +34,7 @@ block_cipher = None
 datas = [
     (str(EXTENSION_DIR), "extension"),
     (str(ASSETS_DIR), "assets"),
+    (str(WEB_TEMPLATES_DIR / "agent-manifests.json"), "web/templates"),
 ]
 
 

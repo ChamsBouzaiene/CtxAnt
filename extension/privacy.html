@@ -52,7 +52,8 @@
     active tab's DOM, take screenshots, click, type, scroll, and navigate.
     This only happens in response to a command you send via Telegram to
     your own CtxAnt bot. The extension does not observe or transmit
-    browsing activity otherwise.
+    browsing activity otherwise, and it does not inject a persistent
+    content script into every page you visit.
   </p>
 
   <h2>Where data goes</h2>
@@ -95,6 +96,11 @@
       flow (e.g. "target role: Senior React Dev"), in the
       <code>agent_memory</code> table.
     </li>
+    <li>
+      A transient connection status in Chrome's extension session storage
+      so the popup can show whether the companion app is connected. This
+      status is local to Chrome and is not synced anywhere.
+    </li>
   </ul>
   <p>
     Clear any of this at any time by quitting CtxAnt and deleting the
@@ -105,7 +111,7 @@
   <ul>
     <li><code>tabs</code>, <code>activeTab</code>, <code>scripting</code> — to
       read and drive the pages you ask the agent to operate on.</li>
-    <li><code>storage</code> — to cache the pairing secret in the extension.</li>
+    <li><code>storage</code> — to store the extension's local connection status for the popup UI.</li>
     <li><code>alarms</code> — to keep the service worker alive so the
       local WebSocket stays connected.</li>
     <li><code>&lt;all_urls&gt;</code> — CtxAnt has to be able to act on
@@ -127,7 +133,7 @@
   <h2>Contact</h2>
   <p>
     Questions: <a href="https://github.com/ChamsBouzaiene/CtxAnt/issues">open a GitHub issue</a>
-    or email <code>hello@ctxant.com</code>.
+    or email <code>hello@ctxant.com</code>. Publisher: <strong>Bouzaiene Chamseddine</strong>.
   </p>
 </body>
 </html>

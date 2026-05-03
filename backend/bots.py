@@ -22,12 +22,21 @@ Public API:
     get_hub_app()            -> the hub Application (for startup banners, etc.).
     ensure_hub_from_env()    -> insert a hub row from TELEGRAM_BOT_TOKEN if the
                                 table is empty. Migration convenience.
+
+Multi-platform note (Phase 5 roadmap — NOT implemented yet):
+    This module is deliberately coupled to python-telegram-bot. When Slack /
+    WhatsApp support lands, we'll introduce a BotAdapter abstraction and port
+    Telegram to be its first implementation. Until then, keep all
+    transport-specific code in THIS FILE only — agents.py, scheduler.py,
+    claude_agent.py, and db.py stay transport-agnostic, which is what makes
+    the eventual refactor tractable rather than a rewrite.
 """
 
 from __future__ import annotations
 
 import asyncio
 import logging
+import os
 from typing import Callable
 
 from telegram import Bot, Update
@@ -106,10 +115,11 @@ def ensure_hub_from_env() -> int | None:
     existing = db.query_one("SELECT id FROM bots WHERE role='hub'")
     if existing:
         return existing["id"]
-    if not TELEGRAM_BOT_TOKEN:
+    token = os.getenv("TELEGRAM_BOT_TOKEN", TELEGRAM_BOT_TOKEN)
+    if not token:
         return None
     bot_id = _insert(
-        token=TELEGRAM_BOT_TOKEN, role="hub", agent_slug=None,
+        token=token, role="hub", agent_slug=None,
         display_name=None, username=None, owner_chat_id=None,
     )
     logger.info(f"Seeded hub bot from env (bot_id={bot_id})")

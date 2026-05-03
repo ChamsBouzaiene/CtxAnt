@@ -58,10 +58,21 @@ def _is_allowed(update: Update) -> bool:
 # ── /start and agent picker ──────────────────────────────────────────────────
 
 def _agent_picker_keyboard() -> InlineKeyboardMarkup:
-    """Two-column inline keyboard listing every agent in the registry."""
+    """Two-column inline keyboard listing every agent in the registry.
+
+    The first row is always "➕ Build your own" — the custom-agent factory —
+    so it reads as a primary CTA, not a footnote at the bottom of the list.
+    """
     all_agents = agents.list_all()
     deployed = set(bots.deployed_agent_slugs())
     rows: list[list[InlineKeyboardButton]] = []
+
+    # "Build your own" on its own row so it doesn't get lost next to a starter.
+    rows.append([InlineKeyboardButton(
+        "➕ Build your own agent",
+        callback_data="build:start",
+    )])
+
     cur: list[InlineKeyboardButton] = []
     for a in all_agents:
         marker = "✅" if a["slug"] in deployed else a["emoji"]
@@ -105,9 +116,10 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     deployed = bots.deployed_agent_slugs()
     intro = (
-        "Hey — I'm CtxAnt. I'll run a little team of AI agents for you, each with "
-        "its own Telegram bot. Pick one to deploy:\n\n"
-        "Tap ✅ if you already have it, or any other emoji to deploy a new one."
+        "Hey — I'm CtxAnt. I run a little team of AI agents for you, each with "
+        "its own Telegram bot.\n\n"
+        "Tap ➕ to *build your own* (HubSpot, LinkedIn, Instagram — whatever you "
+        "need), or pick a starter agent below. ✅ = already deployed."
     )
     if deployed:
         intro += f"\n\nDeployed: {', '.join('/'+s for s in deployed)}"
@@ -130,6 +142,165 @@ async def on_picker_tap(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
     await _begin_deploy(update.effective_chat.id, slug, context)
+
+
+# ── "Build your own agent" wizard ────────────────────────────────────────────
+#
+# Five questions, one at a time. State lives on context.user_data under a
+# private namespace (BUILD_STEP_KEY, BUILD_ANSWERS_KEY) so it can't clash with
+# the BotFather-token capture state ("awaiting_token_for") later in the flow.
+#
+# This is deliberately unabstracted: no BotAdapter, no generic wizard engine.
+# When multi-platform lands (Phase 5), we'll generalize. For now the goal is
+# the minimum surface area that works.
+
+BUILD_STEP_KEY = "build_step"          # which question index we're awaiting
+BUILD_ANSWERS_KEY = "build_answers"    # dict of question_key → user answer
+
+# Each entry: (memory_key, question_text, required?)
+BUILD_QUESTIONS: list[tuple[str, str, bool]] = [
+    ("nickname",
+     "What should I call this agent?\n"
+     "(e.g. 'HubSpot', 'LinkedIn', 'Content Scheduler'). "
+     "This becomes its display name in the picker and its prompt.",
+     True),
+    ("emoji",
+     "Pick an emoji for it (a single character).\n"
+     "Reply 'skip' to use 🤖.",
+     False),
+    ("description",
+     "In one line, what does it do?\n"
+     "(e.g. 'Follows up on warm HubSpot leads and logs notes'). "
+     "Used in the agent list. Reply 'skip' to leave blank.",
+     False),
+    ("task",
+     "Describe the standing task in detail.\n"
+     "This is what runs on a bare /run or on a schedule. Be specific — URLs, "
+     "steps, constraints, output format. You can always override it per-run "
+     "by typing a different instruction to the agent bot.",
+     True),
+    ("preferences",
+     "Any standing preferences?\n"
+     "Tone, language, 'always cite URLs', 'pause if you hit a login wall', etc. "
+     "Reply 'skip' for none.",
+     False),
+]
+
+
+def _build_reset(context: ContextTypes.DEFAULT_TYPE) -> None:
+    context.user_data.pop(BUILD_STEP_KEY, None)
+    context.user_data.pop(BUILD_ANSWERS_KEY, None)
+
+
+async def _ask_build_question(chat_id: int, context: ContextTypes.DEFAULT_TYPE):
+    """Send the current pending question, or finalize if we're done."""
+    step = context.user_data.get(BUILD_STEP_KEY, 0)
+    if step >= len(BUILD_QUESTIONS):
+        await _finalize_build(chat_id, context)
+        return
+    key, question, required = BUILD_QUESTIONS[step]
+    suffix = "" if required else "\n\n(Reply 'skip' to leave blank.)"
+    await context.bot.send_message(chat_id=chat_id, text=question + suffix)
+
+
+async def _start_build(chat_id: int, context: ContextTypes.DEFAULT_TYPE):
+    """Entry point for the 'Build your own agent' wizard."""
+    # Any half-finished deploy or build state starts fresh here.
+    context.user_data.pop("awaiting_token_for", None)
+    context.user_data[BUILD_STEP_KEY] = 0
+    context.user_data[BUILD_ANSWERS_KEY] = {}
+    await context.bot.send_message(
+        chat_id=chat_id,
+        text=(
+            "Let's build a custom agent. I'll ask you 5 quick things — "
+            "nickname, emoji, description, task, preferences — then I'll "
+            "help you pair it with a new Telegram bot."
+        ),
+    )
+    await _ask_build_question(chat_id, context)
+
+
+def _is_skip(text: str, required: bool) -> bool:
+    return (not required) and text.strip().lower() in ("skip", "/skip", "-")
+
+
+async def _capture_build_answer(update: Update, context: ContextTypes.DEFAULT_TYPE,
+                                 text: str) -> bool:
+    """If we're mid-wizard, consume this message as the current answer.
+
+    Returns True if the message was consumed (no further handling needed).
+    """
+    step = context.user_data.get(BUILD_STEP_KEY)
+    if step is None:
+        return False
+    if step >= len(BUILD_QUESTIONS):
+        # Shouldn't happen — bail to a clean state.
+        _build_reset(context)
+        return False
+
+    key, _q, required = BUILD_QUESTIONS[step]
+    answer = text.strip()
+
+    if _is_skip(answer, required):
+        answer = ""
+    elif required and not answer:
+        await update.message.reply_text(
+            "That one's required — please give me a short answer."
+        )
+        return True
+
+    # Store.
+    context.user_data.setdefault(BUILD_ANSWERS_KEY, {})[key] = answer
+    context.user_data[BUILD_STEP_KEY] = step + 1
+    await _ask_build_question(update.effective_chat.id, context)
+    return True
+
+
+async def _finalize_build(chat_id: int, context: ContextTypes.DEFAULT_TYPE):
+    """Turn the captured answers into an agents row, then start the deploy flow."""
+    answers = context.user_data.get(BUILD_ANSWERS_KEY, {})
+    _build_reset(context)
+
+    try:
+        slug = agents.create_custom_agent(
+            chat_id=chat_id,
+            nickname=answers.get("nickname", ""),
+            emoji=answers.get("emoji", ""),
+            description=answers.get("description", ""),
+            task=answers.get("task", ""),
+            preferences=answers.get("preferences", ""),
+        )
+    except Exception as e:
+        logger.exception("create_custom_agent failed")
+        await context.bot.send_message(
+            chat_id=chat_id,
+            text=f"Something went wrong creating the agent: {e}",
+        )
+        return
+
+    a = agents.get(slug)
+    emoji = (a or {}).get("emoji", "🤖")
+    display_name = (a or {}).get("display_name", answers.get("nickname", "Agent"))
+
+    await context.bot.send_message(
+        chat_id=chat_id,
+        text=(
+            f"🎉 *{display_name}* {emoji} is ready to deploy.\n\n"
+            f"Now let's pair it with its own Telegram bot."
+        ),
+        parse_mode="Markdown",
+    )
+    # Hand off to the same BotFather ritual the starter-pack agents use.
+    await _begin_deploy(chat_id, slug, context)
+
+
+async def on_build_tap(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """User tapped '➕ Build your own agent' from the picker."""
+    query = update.callback_query
+    await query.answer()
+    if not query.data or not query.data.startswith("build:"):
+        return
+    await _start_build(update.effective_chat.id, context)
 
 
 # ── /agents ───────────────────────────────────────────────────────────────────
@@ -223,6 +394,11 @@ async def on_hub_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     text = msg.text.strip()
 
+    # Are we mid-"Build your own"? Capture the answer and move to the next Q.
+    if BUILD_STEP_KEY in context.user_data:
+        if await _capture_build_answer(update, context, text):
+            return
+
     # Are we expecting a bot token?
     slug = context.user_data.get("awaiting_token_for")
     if slug:
@@ -238,7 +414,8 @@ async def on_hub_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Default: hub free-form. Nudge the user to /start.
     await msg.reply_text(
-        "Tap /start to pick an agent to deploy, or /agents to see what's running."
+        "Tap /start to pick a starter agent or build your own, "
+        "or /agents to see what's already running."
     )
 
 
@@ -317,7 +494,7 @@ async def cmd_help(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "I'm the CtxAnt hub. I deploy agent bots that each do one job.\n\n"
         "Commands:\n"
-        "  /start — pick an agent to deploy\n"
+        "  /start — pick a starter agent or build your own\n"
         "  /agents — list deployed bots\n"
         "  /deploy <slug> — deploy an agent as its own bot\n"
         "  /undeploy <slug> — stop and remove an agent bot\n"
@@ -339,4 +516,5 @@ def wire(app: Application) -> None:
     app.add_handler(CommandHandler("usage",    cmd_usage))
     app.add_handler(CommandHandler("stop_all", cmd_stop_all))
     app.add_handler(CallbackQueryHandler(on_picker_tap, pattern=r"^deploy:"))
+    app.add_handler(CallbackQueryHandler(on_build_tap,  pattern=r"^build:"))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, on_hub_text))

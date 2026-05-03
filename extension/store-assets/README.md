@@ -9,7 +9,7 @@ listing copy below into the Developer Dashboard fields as-is.
 
 - [ ] Bump `extension/manifest.json` version if re-submitting (Chrome requires a strictly-higher version on every upload).
 - [ ] Regenerate icons if the brand changes: `.venv/bin/python extension/icons/build_icons.py`.
-- [ ] Host `privacy.html` somewhere public (GitHub Pages, Vercel — `https://ctxant.com/privacy`) and put that URL into the Developer Dashboard's **Privacy policy** field. The file in `extension/privacy.html` is the source of truth; mirror it.
+- [ ] Host `privacy.html` somewhere public (GitHub Pages, Vercel — `https://ctxant.com/privacy.html`) and put that URL into the Developer Dashboard's **Privacy policy** field. The file in `extension/privacy.html` is the source of truth; mirror it.
 - [ ] Zip the extension for upload: `cd extension && zip -r ../ctxant-extension-v$(jq -r .version manifest.json).zip . -x '*.DS_Store' -x 'store-assets/*' -x 'icons/build_icons.py'`
 
 ## 2. Listing fields
@@ -19,9 +19,14 @@ listing copy below into the Developer Dashboard fields as-is.
 CtxAnt — Text your browser anything
 ```
 
+**Developer / publisher**
+```
+Bouzaiene Chamseddine
+```
+
 **Summary** (max 132 chars — this is what shows under the name in search)
 ```
-An AI sidekick that drives YOUR Chrome from Telegram. Uses your logins, your tabs, your life. No sandbox. Local-only.
+A local Chrome companion for the CtxAnt Mac app. User-triggered browser automation in the Chrome profile you already use.
 ```
 
 **Category:** Productivity
@@ -37,8 +42,8 @@ Other AI agents open a fresh sandboxed browser that doesn't know you. CtxAnt use
 
 WHAT IT DOES
 • Reads, clicks, types, scrolls, navigates — on any site.
-• Handles forms, logins (you're already signed in), multi-tab flows.
-• Takes screenshots, extracts page content, runs JS when asked.
+• Handles forms, logins (you're already signed in), and multi-tab flows.
+• Takes screenshots and extracts page content needed to complete the task.
 • Schedules recurring tasks ("every morning at 9am, summarize my inbox").
 • Deploys a dedicated Telegram bot per task: Job Hunter, Deal Finder, Inbox Triage, and more.
 
@@ -48,13 +53,13 @@ HOW IT WORKS
 3. Text your own Telegram bot anything.
 
 PRIVACY
-• 100% local. The extension talks to the CtxAnt app over ws://127.0.0.1:8765. Nothing goes to a CtxAnt server because there is no CtxAnt server.
+• 100% local between Chrome and the CtxAnt app. The extension talks to the Mac app over ws://127.0.0.1:8765. Nothing goes to a CtxAnt server because there is no CtxAnt server.
 • BYOK. You bring your own xAI (Grok) or Anthropic (Claude) API key. Prompts go directly from your machine to the provider.
-• Your browsing is NOT observed unless you issue a command.
+• Your browsing is not observed unless you issue a command.
 
 WHAT IT ISN'T
-• Not a cloud agent. Not a Chrome sidebar chatbot. Not a scraper.
-• No account, no subscription, no telemetry.
+• Not a cloud agent. Not a Chrome sidebar chatbot. Not a passive page monitor.
+• No account, no subscription, no telemetry, and no remote code loading.
 
 Requires the companion Mac app. Windows and Linux coming soon.
 ```
@@ -67,7 +72,7 @@ Drop files into this folder named `screenshot-1.png` … `screenshot-5.png`. Sug
 2. The hub bot's `/start` screen with the agent deploy buttons.
 3. The dashboard at `http://127.0.0.1:8766/dashboard`.
 4. A Job Hunter agent DM'ing a morning digest.
-5. The popup showing the green "Connected to CtxAnt" dot.
+5. The popup showing the connected state and localhost explanation.
 
 **Promotional tile** (440×280 PNG — optional but recommended for discovery)
 
@@ -88,7 +93,7 @@ Required to act on the current tab on behalf of the user. The extension executes
 
 **Justification for `storage`:**
 ```
-Stores a local pairing secret (a per-install random string) so the extension can authenticate to the companion Mac app over localhost. No remote data is stored.
+Stores the extension's local connection status so the popup can show whether the companion Mac app is connected. No browsing data is stored remotely.
 ```
 
 **Justification for `alarms`:**
@@ -98,7 +103,7 @@ Chrome MV3 service workers idle out after ~30s. We use a periodic alarm to keep 
 
 **Justification for `host_permissions: <all_urls>`:**
 ```
-Users ask the AI to work on arbitrary sites they visit (Gmail, LinkedIn, their bank, any web form). The extension cannot know in advance which origins that will be, so broad host access is required. The extension does not observe or transmit browsing data outside of an active user command.
+Users ask the AI to work on arbitrary sites they visit (Gmail, LinkedIn, their bank, any web form). The extension cannot know in advance which origins those commands will target, so broad host access is required. The extension does not inject a persistent content script or observe browsing activity outside of an active user command.
 ```
 
 **Justification for `host_permissions: http://127.0.0.1/*, http://localhost/*`:**
@@ -108,21 +113,23 @@ Used to pair with the companion Mac app running on the user's own machine (local
 
 **Single purpose description:**
 ```
-Let users drive their own Chrome browser via natural-language commands sent through Telegram, as part of the CtxAnt desktop AI agent system.
+Let users drive their own Chrome browser through the CtxAnt Mac app using natural-language commands sent through Telegram.
 ```
 
-**Are you handling user data?** Yes — conversation content only, and only to deliver it to the user's configured AI provider with their API key. No CtxAnt-owned servers.
+**Are you handling user data?** Yes — conversation content and page content only as needed to carry out the user's command through the companion Mac app and the user's configured AI provider. No CtxAnt-owned servers.
 
 **Data uses checklist (check these):**
 - [x] Personally identifiable information — only what the user types into chat.
 - [ ] Health, financial, location — only if the user directs an agent to those sites; we do not store it.
-- [x] Authentication information — the local pairing secret.
+- [x] Authentication information — the local pairing secret handled between the extension and the companion app on localhost.
 - [x] Website content — in response to user commands.
 
 **Do not check:**
 - We do NOT sell, transfer, or use this data for any purpose unrelated to the single stated purpose.
 
-**Privacy policy URL:** `https://ctxant.com/privacy`
+**Privacy policy URL:** `https://ctxant.com/privacy.html`
+
+**Support URL:** `https://github.com/ChamsBouzaiene/CtxAnt/issues`
 
 ## 4. Upload sequence
 
