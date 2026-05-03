@@ -1,0 +1,67 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#070914"/>
+  <circle cx="228" cy="154" r="190" fill="url(#paint0_radial)" fill-opacity="0.9"/>
+  <circle cx="962" cy="136" r="164" fill="url(#paint1_radial)" fill-opacity="0.92"/>
+  <circle cx="928" cy="500" r="220" fill="url(#paint2_radial)" fill-opacity="0.78"/>
+  <circle cx="386" cy="470" r="236" fill="url(#paint3_radial)" fill-opacity="0.64"/>
+  <rect x="86" y="82" width="1028" height="466" rx="34" fill="url(#paint4_linear)" fill-opacity="0.92" stroke="rgba(180,202,255,0.18)"/>
+  <rect x="146" y="138" width="340" height="52" rx="26" fill="#10182D" stroke="#24314F"/>
+  <circle cx="178" cy="164" r="9" fill="url(#paint5_linear)"/>
+  <text x="204" y="170" fill="#C8D0E9" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="0.14em">BROWSER AGENTS IN YOUR REAL CHROME</text>
+  <text x="146" y="280" fill="#F4F7FF" font-family="Inter, Arial, sans-serif" font-size="88" font-weight="700" letter-spacing="-0.07em">Text your browser</text>
+  <text x="146" y="368" fill="url(#paint6_linear)" font-family="Inter, Arial, sans-serif" font-size="96" font-weight="700" letter-spacing="-0.08em">anything.</text>
+  <text x="146" y="434" fill="#A9B3D0" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="500">Build your own browser worker, run it from Telegram, and let it</text>
+  <text x="146" y="474" fill="#A9B3D0" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="500">reuse the Chrome session you already live in.</text>
+  <rect x="146" y="504" width="208" height="58" rx="29" fill="url(#paint7_linear)"/>
+  <text x="184" y="542" fill="#08111B" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">Install for Mac</text>
+  <rect x="690" y="146" width="278" height="144" rx="26" fill="#10182D" stroke="#263555"/>
+  <text x="720" y="188" fill="#D2DBF3" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="0.12em">FLAGSHIP WORKFLOW</text>
+  <text x="720" y="228" fill="#F4F7FF" font-family="Inter, Arial, sans-serif" font-size="36" font-weight="700" letter-spacing="-0.05em">Custom Agent</text>
+  <text x="720" y="265" fill="#9FB0D7" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="500">Standing task → test in chat → schedule it</text>
+  <rect x="720" y="292" width="112" height="34" rx="17" fill="#151F37" stroke="#2B3A5D"/>
+  <text x="745" y="314" fill="#D2DBF3" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">Web Runner</text>
+  <rect x="842" y="292" width="90" height="34" rx="17" fill="#151F37" stroke="#2B3A5D"/>
+  <text x="865" y="314" fill="#D2DBF3" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">Telegram</text>
+  <rect x="744" y="338" width="234" height="132" rx="28" fill="#0D1528" stroke="#23324E"/>
+  <text x="776" y="380" fill="#D0D9F1" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700" letter-spacing="0.08em">MORNING LIST</text>
+  <text x="776" y="418" fill="#F4F7FF" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700">/settings → save the task</text>
+  <text x="776" y="452" fill="#9FB0D7" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="500">/schedule every day at 9am</text>
+  <defs>
+    <radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(228 154) rotate(90) scale(190)">
+      <stop stop-color="#5A73FF"/>
+      <stop offset="1" stop-color="#5A73FF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="paint1_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(962 136) rotate(90) scale(164)">
+      <stop stop-color="#63DCFF"/>
+      <stop offset="1" stop-color="#63DCFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="paint2_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(928 500) rotate(90) scale(220)">
+      <stop stop-color="#FF5EDB"/>
+      <stop offset="1" stop-color="#FF5EDB" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="paint3_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(386 470) rotate(90) scale(236)">
+      <stop stop-color="#8E62FF"/>
+      <stop offset="1" stop-color="#8E62FF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="paint4_linear" x1="600" y1="82" x2="600" y2="548" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F1528"/>
+      <stop offset="1" stop-color="#0A1020"/>
+    </linearGradient>
+    <linearGradient id="paint5_linear" x1="169" y1="155" x2="187" y2="173" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#63DCFF"/>
+      <stop offset="1" stop-color="#FF5EDB"/>
+    </linearGradient>
+    <linearGradient id="paint6_linear" x1="146" y1="318" x2="571" y2="387" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5A73FF"/>
+      <stop offset="0.35" stop-color="#63DCFF"/>
+      <stop offset="0.7" stop-color="#8E62FF"/>
+      <stop offset="1" stop-color="#FF5EDB"/>
+    </linearGradient>
+    <linearGradient id="paint7_linear" x1="146" y1="504" x2="354" y2="562" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5A73FF"/>
+      <stop offset="0.35" stop-color="#63DCFF"/>
+      <stop offset="0.78" stop-color="#8E62FF"/>
+      <stop offset="1" stop-color="#FF5EDB"/>
+    </linearGradient>
+  </defs>
+</svg>

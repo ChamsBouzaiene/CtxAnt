@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Agent Details — CtxAnt</title>
+<meta name="description" content="Starter-agent detail page for CtxAnt, with commands, examples, tips, and realistic limitations." />
+<link rel="icon" href="/assets/favicon.png" />
+<link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body data-page="catalog">
+<div id="site-shell"></div>
+
+<main class="page-shell detail-shell">
+  <div class="shell" id="app">
+    <div class="release-empty">Loading agent details…</div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+<script src="/assets/site.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get('slug') || '';
+  const app = document.getElementById('app');
+
+  function esc(s) {
+    if (s == null) return '';
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function icon(agent, className = 'agent-icon') {
+    if (window.CtxAntUI && agent && agent.icon) {
+      const rendered = window.CtxAntUI.renderIcon(agent.icon, `${agent.name} icon`, className);
+      if (rendered) return rendered;
+    }
+    return `<span class="${className}">${esc(agent && agent.emoji ? agent.emoji : '•')}</span>`;
+  }
+
+  function list(items) {
+    return `<div class="detail-list">${(items || []).map(item => `<div class="item">${esc(item)}</div>`).join('')}</div>`;
+  }
+
+  fetch('/templates/agent-manifests.json')
+    .then(r => r.json())
+    .then(data => {
+      const agent = (data.agents || []).find(item => item.slug === slug);
+      if (!agent) throw new Error('missing');
+      document.title = `${agent.name} — CtxAnt`;
+      app.innerHTML = `
+        <section class="page-section">
+          <div class="page-hero-card content-card" data-reveal>
+            <div class="eyebrow">Starter agent</div>
+            <div class="page-hero-identity">
+              ${icon(agent)}
+              <div class="identity-copy">
+                <div class="identity-label">Preset workflow</div>
+                <h1 class="identity-title">${esc(agent.name)}</h1>
+              </div>
+            </div>
+            <p class="lede">${esc(agent.long_description)}</p>
+            <div class="chip-row">
+              ${(agent.chips || []).map(chip => `<span class="chip">${esc(chip)}</span>`).join('')}
+            </div>
+            <div class="cta-row">
+              <a class="btn btn-primary" href="/install.html">Install CtxAnt</a>
+              <a class="btn btn-secondary" href="/templates/">Back to agents</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-section detail-grid">
+          <article class="detail-card" data-reveal>
+            <h2>What it does</h2>
+            ${list(agent.what_it_does || [])}
+          </article>
+          <article class="detail-card" data-reveal>
+            <h2>How to use it</h2>
+            ${list(agent.how_to_use || [])}
+          </article>
+        </section>
+
+        <section class="page-section">
+          <article class="detail-card" data-reveal>
+            <h2>Commands explained</h2>
+            <div class="command-list">
+              ${(agent.commands || []).map(item => `
+                <div class="command">
+                  <strong><code>${esc(item.cmd)}</code></strong>
+                  <div>${esc(item.description)}</div>
+                </div>
+              `).join('')}
+            </div>
+          </article>
+        </section>
+
+        <section class="page-section">
+          <div class="section-head" data-reveal>
+            <h2>Examples</h2>
+            <p>Starter agents are just opinionated entry points into recurring browser work. These examples show the intended operating shape.</p>
+          </div>
+          <div class="example-grid">
+            ${(agent.examples || []).map(example => `
+              <article class="example-card" data-reveal>
+                <h3>${esc(example.title)}</h3>
+                <p>${esc(example.what)}</p>
+                <div class="example-block">
+                  <strong>How to use it</strong>
+                  ${list(example.setup || [])}
+                </div>
+                ${example.prompt ? `
+                  <div class="example-block">
+                    <strong>Example message</strong>
+                    <code>${esc(example.prompt)}</code>
+                  </div>
+                ` : ''}
+                ${example.schedule ? `
+                  <div class="example-block">
+                    <strong>Good schedule</strong>
+                    <code>${esc(example.schedule)}</code>
+                  </div>
+                ` : ''}
+                <div class="example-block">
+                  <strong>Expected result</strong>
+                  <p class="text-lead">${esc(example.result || '')}</p>
+                </div>
+              </article>
+            `).join('')}
+          </div>
+        </section>
+
+        <section class="page-section detail-grid">
+          <article class="detail-card" data-reveal>
+            <h2>Tips</h2>
+            ${list(agent.tips || [])}
+          </article>
+          <article class="detail-card" data-reveal>
+            <h2>Limitations</h2>
+            ${list(agent.limitations || [])}
+          </article>
+        </section>
+      `;
+      document.dispatchEvent(new Event('ctxant:refresh-reveal'));
+    })
+    .catch(() => {
+      app.innerHTML = '<div class="release-empty">That agent page does not exist. <a href="/templates/">Back to catalog</a>.</div>';
+    });
+</script>
+</body>
+</html>

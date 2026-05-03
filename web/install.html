@@ -3,188 +3,117 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Install CtxAnt — ctxant.com</title>
-<meta name="description" content="Install CtxAnt on your Mac in under two minutes. Drag-to-Applications DMG, Chrome extension, done." />
+<title>Install CtxAnt</title>
+<meta name="description" content="Install CtxAnt on your Mac, pair the extension, and start running browser agents from Telegram." />
 <link rel="icon" href="/assets/favicon.png" />
 <link rel="stylesheet" href="/assets/style.css" />
 </head>
-<body>
+<body data-page="install">
+<div id="site-shell"></div>
 
-<nav class="top">
-  <div class="wrap">
-    <a class="logo" href="/"><span class="mark">✦</span><span>CtxAnt</span></a>
-    <div class="links">
-      <a href="/">Home</a>
-      <a href="/templates/">Templates</a>
-      <a href="/privacy.html">Privacy</a>
-      <a href="https://github.com/ChamsBouzaiene/CtxAnt">GitHub</a>
+<main class="page-shell">
+  <section class="catalog-hero">
+    <div class="shell page-hero-card content-card" data-reveal>
+      <div class="eyebrow">Install</div>
+      <h1>From download to first agent in a few minutes.</h1>
+      <p class="lede">Install the app, pair the Chrome extension, then deploy a starter agent or build your own browser worker from the hub.</p>
+      <div class="install-command">
+        <pre id="install-cmd-text"><code>curl -fsSL https://ctxant.com/install.sh | sh</code></pre>
+        <button type="button" class="copy-btn" data-copy-target="#install-cmd-text">Copy</button>
+      </div>
+      <div class="meta-strip">
+        <span class="meta-pill">macOS 11+</span>
+        <span class="meta-pill">Chrome required</span>
+        <span class="meta-pill">Menu-bar app</span>
+      </div>
     </div>
-  </div>
-</nav>
+  </section>
 
-<article class="prose">
-
-<h1>Install CtxAnt</h1>
-<p style="color: var(--muted);">Mac app + Chrome extension. Two minutes to running, five to your first agent.</p>
-
-<div class="note">
-  <strong>System requirements.</strong> macOS 11 (Big Sur) or newer, on Apple Silicon or Intel. Google Chrome for the browser extension. We're working on Windows and Linux — <a href="https://github.com/ChamsBouzaiene/CtxAnt">watch the repo</a>.
-</div>
-
-<h2>1. Install the Mac app</h2>
-<p>One line in Terminal. Downloads, installs to <code>/Applications</code>, launches.</p>
-
-<div class="install-cmd">
-  <pre id="install-cmd-text"><code>curl -fsSL https://ctxant.com/install.sh | sh</code></pre>
-  <button type="button" class="copy-btn" data-copy-target="#install-cmd-text">Copy</button>
-</div>
-<p style="color: var(--muted); font-size: 14px; margin-top: 8px;">
-  No Apple Gatekeeper prompt, no dragging, no right-click dance — scripted installs don't carry the quarantine flag that makes macOS balk.
-  <a href="https://github.com/ChamsBouzaiene/CtxAnt/blob/main/web/install.sh">Read the script</a> before running if you like (it's 70 lines).
-</p>
-
-<details style="margin-top: 18px;">
-  <summary><strong>Prefer a DMG?</strong> (manual fallback)</summary>
-  <p style="margin-top: 12px;">
-    <a class="btn btn-ghost" href="https://github.com/ChamsBouzaiene/CtxAnt/releases/latest/download/CtxAnt.dmg">Download CtxAnt.dmg</a>
-  </p>
-  <ol>
-    <li>Open the DMG and drag <strong>CtxAnt</strong> into Applications.</li>
-    <li>In Applications, <strong>right-click</strong> CtxAnt → <strong>Open</strong> → <strong>Open</strong> again on the Gatekeeper dialog. (One-time. CtxAnt is unsigned for launch week — the curl installer avoids this because quarantine isn't set on curl'd files.)</li>
-  </ol>
-</details>
-
-<h2>2. Walk through the onboarding wizard</h2>
-<p>
-  The wizard pops up automatically on first launch. It has four quick steps:
-</p>
-<ol>
-  <li>
-    <strong>Create your hub bot on Telegram.</strong> Open <code>@BotFather</code> → <code>/newbot</code> →
-    give it a name and a username ending in <code>bot</code>. BotFather will reply with a token. Paste it.
-  </li>
-  <li>
-    <strong>Pick an AI provider.</strong> We recommend xAI Grok — it's cheap, fast, and handles tools well. Get a key at
-    <a href="https://console.x.ai">console.x.ai</a> (has a free tier). If you already have an Anthropic key, Claude works too.
-  </li>
-  <li>
-    <strong>Paste your Telegram user id.</strong> Message <code>@userinfobot</code> and it'll tell you. This locks the bot down so only you can use it.
-  </li>
-  <li>
-    <strong>Install the Chrome extension.</strong> See step 3 below.
-  </li>
-</ol>
-<p>
-  CtxAnt's backend starts the instant you click Finish, so by the time you've done step 3 your hub bot is already live.
-</p>
-
-<h2>3. Install the Chrome extension</h2>
-<p>During launch week, until Chrome Web Store review finishes, install directly:</p>
-<ol>
-  <li>Open <a href="chrome://extensions">chrome://extensions</a> in Chrome.</li>
-  <li>Toggle <strong>Developer mode</strong> (top right) on.</li>
-  <li>Click <strong>Load unpacked</strong>.</li>
-  <li>Select the <code>extension/</code> folder inside <code>ctxant.app</code>. (Right-click ctxant.app → Show Package Contents → <code>Contents/Resources/extension</code>.)</li>
-</ol>
-<p class="note"><strong>Chrome Web Store.</strong> Listing is <a href="https://chrome.google.com/webstore/detail/ctxant/xxxxxxxxxxxxxxxxxxxxxxxx">submitted and in review</a>; we'll swap this section for a one-click install when it's approved.</p>
-<p>
-  The extension auto-pairs with the CtxAnt app on localhost. If the popup shows a green dot labelled <em>Connected to CtxAnt</em>, you're in.
-</p>
-
-<h2>4. Text your bot</h2>
-<p>
-  Open Telegram, find the hub bot you created in step 1, send <code>/start</code>. It greets you with a set of <strong>Deploy</strong> buttons — one per agent (Job Hunter, Deal Finder, Inbox Triage, etc).
-</p>
-<p>
-  Tap one, follow the BotFather flow again (a one-time 60-second ritual for each agent so it gets its own Telegram chat bubble), answer the agent's 3–5 setup questions, and you're done. The new agent bot DMs you immediately to say it's ready. <code>/run</code> kicks off its first task.
-</p>
-
-<h2>Troubleshooting</h2>
-
-<details open>
-  <summary><strong>The menu bar icon is missing.</strong></summary>
-  <p>
-    On notched MacBooks, too many menu-bar items get clipped into the notch's dead zone. Hold <code>⌘ Cmd</code> and drag items left to reveal CtxAnt, or install a menu-bar manager like <a href="https://github.com/jordanbaird/Ice">Ice</a> (free) or <a href="https://www.macbartender.com/">Bartender</a>. You can also always reach the built-in dashboard at <code>http://127.0.0.1:8766/dashboard</code> regardless.
-  </p>
-</details>
-
-<details>
-  <summary><strong>Extension shows "Disconnected".</strong></summary>
-  <p>
-    Check the CtxAnt app is running (look for the bold sparkle icon in your menu bar). If it is but the extension still can't connect, quit and relaunch the app — the pairing handshake happens on startup.
-  </p>
-</details>
-
-<details>
-  <summary><strong>"Setup incomplete" alert after the wizard.</strong></summary>
-  <p>
-    The wizard was dismissed before all three fields were saved. Re-launch CtxAnt and it'll reappear.
-  </p>
-</details>
-
-<details>
-  <summary><strong>My token / API key leaked. How do I rotate?</strong></summary>
-  <p>
-    Revoke the key in your AI provider's dashboard (xAI or Anthropic), then edit <code>~/Library/Application Support/ctxant/.env</code> and paste the new one. For the Telegram bot token, message <code>@BotFather</code> → <code>/revoke</code> and it'll issue a new token — paste that into the same <code>.env</code>. Restart CtxAnt.
-  </p>
-</details>
-
-<p style="margin-top: 40px;">
-  Stuck? <a href="https://github.com/ChamsBouzaiene/CtxAnt/issues/new">Open an issue</a> or email
-  <a href="mailto:hello@ctxant.com">hello@ctxant.com</a>.
-</p>
-
-</article>
-
-<script>
-  // Copy-to-clipboard for any .copy-btn[data-copy-target]. Flashes "Copied!"
-  // for 1.6s so the user knows it worked without a disruptive modal.
-  // Falls back to document.execCommand on browsers where the async API is
-  // blocked (some corporate setups) so it still works as long as JS runs.
-  document.querySelectorAll('.copy-btn[data-copy-target]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var target = document.querySelector(btn.getAttribute('data-copy-target'));
-      if (!target) return;
-      var text = target.innerText.trim();
-      var done = function () {
-        var original = btn.textContent;
-        btn.textContent = 'Copied!';
-        btn.classList.add('copied');
-        setTimeout(function () {
-          btn.textContent = original;
-          btn.classList.remove('copied');
-        }, 1600);
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(done, function () {
-          // fall through to legacy path below
-          legacy();
-        });
-      } else {
-        legacy();
-      }
-      function legacy() {
-        var r = document.createRange();
-        r.selectNodeContents(target);
-        var s = window.getSelection();
-        s.removeAllRanges(); s.addRange(r);
-        try { document.execCommand('copy'); done(); } catch (_) {}
-        s.removeAllRanges();
-      }
-    });
-  });
-</script>
-
-<footer>
-  <div class="wrap">
-    <div>© 2026 Chams Bouzaiene.</div>
-    <div>
-      <a href="/">Home</a>
-      <a href="/privacy.html">Privacy</a>
-      <a href="https://github.com/ChamsBouzaiene/CtxAnt">GitHub</a>
+  <section class="page-section">
+    <div class="shell">
+      <div class="feature-grid">
+        <article class="feature-card" data-reveal>
+          <div class="eyebrow">1</div>
+          <h3>Install the Mac app</h3>
+          <p>Use the one-line installer or download the DMG manually if you prefer the drag-to-Applications route.</p>
+        </article>
+        <article class="feature-card" data-reveal>
+          <div class="eyebrow">2</div>
+          <h3>Finish the onboarding wizard</h3>
+          <p>Create the hub bot, paste your AI key, and lock access to your Telegram user id.</p>
+        </article>
+        <article class="feature-card" data-reveal>
+          <div class="eyebrow">3</div>
+          <h3>Load the Chrome extension</h3>
+          <p>Point Chrome at the bundled extension folder, then let the localhost pairing handshake connect it automatically.</p>
+        </article>
+      </div>
     </div>
-  </div>
-</footer>
+  </section>
 
+  <section class="page-section">
+    <div class="shell">
+      <div class="story-layout">
+        <article class="story-panel sticky" data-reveal>
+          <div class="eyebrow">What happens next</div>
+          <h3 class="stack-title">Your hub bot becomes the deployment console.</h3>
+          <p class="stack-copy">Once the app and extension are live, the hub bot is where you either launch a preset or build your own browser agent.</p>
+        </article>
+        <div class="story-steps">
+          <article class="story-panel story-step" data-reveal>
+            <div class="step-index">01</div>
+            <h3>Paste the install command</h3>
+            <p>The script downloads the latest DMG, copies CtxAnt into Applications, and launches it immediately.</p>
+          </article>
+          <article class="story-panel story-step" data-reveal>
+            <div class="step-index">02</div>
+            <h3>Create your hub bot</h3>
+            <p>Use BotFather to make a Telegram bot for the hub, then paste the token into the onboarding wizard.</p>
+          </article>
+          <article class="story-panel story-step" data-reveal>
+            <div class="step-index">03</div>
+            <h3>Install the Chrome extension</h3>
+            <p>Production installs should use the Chrome Web Store listing when it is live. Until then, the fallback path is <code>chrome://extensions</code> → developer mode → <code>Load unpacked</code> using the bundled <code>extension/</code> folder.</p>
+          </article>
+          <article class="story-panel story-step" data-reveal>
+            <div class="step-index">04</div>
+            <h3>Deploy or build</h3>
+            <p>Open the hub bot, send <code>/start</code>, then either pick a starter or tap <strong>➕ Build your own agent</strong>.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="shell">
+      <div class="section-head" data-reveal>
+        <h2>Troubleshooting</h2>
+        <p>Most install issues are simple: missing extension reload, app not running, or wizard setup cut short.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="faq-card" data-reveal>
+          <h3>The menu bar icon is missing</h3>
+          <p>Notched MacBooks can hide menu-bar items. Shift icons left, or reach the local dashboard directly at <code>http://127.0.0.1:8766/dashboard</code>.</p>
+        </article>
+        <article class="faq-card" data-reveal>
+          <h3>The extension says disconnected</h3>
+          <p>Make sure the app is running, then quit and relaunch it. The extension pairs to the backend during startup.</p>
+        </article>
+        <article class="faq-card" data-reveal>
+          <h3>The setup feels incomplete</h3>
+          <p>If the wizard was dismissed too early, relaunch CtxAnt and complete the required fields again before testing the bot.</p>
+        </article>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/agents/">See the flagship workflow</a>
+        <a class="btn btn-secondary" href="https://github.com/ChamsBouzaiene/CtxAnt/issues/new">Open an issue</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="/assets/site.js"></script>
 </body>
 </html>

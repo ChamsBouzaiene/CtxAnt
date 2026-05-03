@@ -3,167 +3,189 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Agent templates — CtxAnt</title>
-<meta name="description" content="Starter pack of AI agents for CtxAnt. Job Hunter, Deal Finder, Inbox Triage, and more. One click to deploy into your Telegram." />
+<title>Agents — CtxAnt</title>
+<meta name="description" content="Browse the flagship Custom Agent / Web Runner workflow plus the starter agents that ship with CtxAnt." />
 <link rel="icon" href="/assets/favicon.png" />
 <link rel="stylesheet" href="/assets/style.css" />
 </head>
-<body>
+<body data-page="catalog">
+<div id="site-shell"></div>
 
-<nav class="top">
-  <div class="wrap">
-    <a class="logo" href="/"><span class="mark">✦</span><span>CtxAnt</span></a>
-    <div class="links">
-      <a href="/">Home</a>
-      <a href="/install.html">Install</a>
-      <a href="/templates/" style="color: var(--fg);">Templates</a>
-      <a href="https://github.com/ChamsBouzaiene/CtxAnt">GitHub</a>
+<main class="page-shell">
+  <section class="catalog-hero">
+    <div class="shell page-hero-card content-card" data-reveal>
+      <div class="eyebrow">Agents catalog</div>
+      <h1>Start with a preset. Or build the browser worker you actually want.</h1>
+      <p class="lede">The flagship is still Custom Agent / Web Runner. The starter agents are simply faster entry points for common recurring browser jobs.</p>
     </div>
-  </div>
-</nav>
+  </section>
 
-<header class="hero" style="padding-bottom: 32px;">
-  <div class="wrap">
-    <span class="eyebrow">Agent templates</span>
-    <h1 style="font-size: clamp(32px, 5vw, 48px);">Pick an agent. Deploy it in 90 seconds.</h1>
-    <p class="lede">
-      Each template is a ready-to-run agent bot. You get a dedicated Telegram chat,
-      a short guided setup, and scheduled runs if you want them. Nothing to write from scratch.
-    </p>
-  </div>
-</header>
-
-<section style="padding-top: 0;">
-  <div class="wrap">
-
-    <div class="gallery-header">
-      <input type="search" id="q" placeholder="Filter — e.g. inbox, deal, linkedin…" />
-      <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted);">
-        <label for="hub">Your hub bot:</label>
-        <input
-          type="text"
-          id="hub"
-          placeholder="@YourHubBot"
-          style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--fg); font-size: 13px; min-width: 180px;"
-        />
+  <section class="page-section">
+    <div class="shell">
+      <div id="featured"></div>
+      <div class="search-toolbar" data-reveal>
+        <div class="field">
+          <label for="q">Filter starter agents</label>
+          <input id="q" type="search" class="input" placeholder="jobs, inbox, research…" />
+        </div>
+        <div class="field">
+          <label for="hub">Hub bot username</label>
+          <input id="hub" type="text" class="input" placeholder="@YourHubBot" />
+        </div>
       </div>
+      <div id="catalog" class="agent-grid"></div>
+      <div id="empty" class="release-empty" hidden>No starter agents match this filter.</div>
     </div>
+  </section>
+</main>
 
-    <p style="font-size: 13px; color: var(--muted); margin-top: -16px; margin-bottom: 24px;">
-      <em>Tip:</em> type your hub bot's username (e.g. <code>myctxant_hub_bot</code>) above, and the
-      <strong>Deploy</strong> buttons will deep-link straight into your CtxAnt. Your browser remembers this
-      between visits — nothing gets sent anywhere.
-    </p>
-
-    <div id="gallery" class="gallery"></div>
-    <p id="empty" style="color: var(--muted); display: none; text-align: center; padding: 40px 0;">
-      No templates match your filter.
-    </p>
-
-    <div style="margin-top: 48px; padding: 24px; border: 1px dashed var(--border); border-radius: var(--radius); text-align: center;">
-      <h3 style="margin: 0 0 8px;">Have an idea for an agent?</h3>
-      <p style="margin: 0; color: var(--muted);">
-        Templates are just prompt + setup-flow JSON + memory keys. See the
-        <a href="https://github.com/ChamsBouzaiene/CtxAnt/tree/main/backend/agents.py">starter pack source</a>
-        and open a PR. Each merged template lands in this gallery on the next deploy.
-      </p>
-    </div>
-
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <div>© 2026 Chams Bouzaiene.</div>
-    <div>
-      <a href="/">Home</a>
-      <a href="/install.html">Install</a>
-      <a href="/privacy.html">Privacy</a>
-      <a href="https://github.com/ChamsBouzaiene/CtxAnt">GitHub</a>
-    </div>
-  </div>
-</footer>
-
+<div id="site-footer"></div>
+<script src="/assets/site.js"></script>
 <script>
-  // Gallery state ---------------------------------------------------------
-  let TEMPLATES = [];
   const STORAGE_KEY = 'ctxant.hub_username';
-
-  const gallery = document.getElementById('gallery');
+  const STARTER_ORDER = [
+    'job_hunter',
+    'deal_finder',
+    'inbox_triage',
+    'morning_digest',
+    'researcher',
+    'social_poster',
+    'lead_tracker',
+    'meeting_prep',
+    'support_triage',
+    'invoice_collector',
+    'marketplace_monitor',
+    'web_runner'
+  ];
+  const STARTER_POSITION = Object.fromEntries(STARTER_ORDER.map((slug, index) => [slug, index]));
+  const featured = document.getElementById('featured');
+  const catalog = document.getElementById('catalog');
   const q = document.getElementById('q');
   const hub = document.getElementById('hub');
-  const emptyNote = document.getElementById('empty');
+  const empty = document.getElementById('empty');
+  let manifests = null;
 
-  // Hub-username persistence ---------------------------------------------
-  hub.value = localStorage.getItem(STORAGE_KEY) || '';
-  hub.addEventListener('input', () => {
-    localStorage.setItem(STORAGE_KEY, hub.value.trim());
-    render();
-  });
+  function esc(s) {
+    if (s == null) return '';
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function icon(agent, className = 'agent-icon') {
+    if (window.CtxAntUI && agent && agent.icon) {
+      const rendered = window.CtxAntUI.renderIcon(agent.icon, `${agent.name} icon`, className);
+      if (rendered) return rendered;
+    }
+    return `<span class="${className}">${esc(agent && agent.emoji ? agent.emoji : '•')}</span>`;
+  }
 
   function cleanHub(raw) {
-    // Accept "@name", "name", or full t.me URLs. Return bare username or ''.
     const s = (raw || '').trim();
     if (!s) return '';
     const m = s.match(/(?:t\.me\/|@)?([A-Za-z0-9_]{4,})/);
     return m ? m[1] : '';
   }
 
-  function installUrl(slug) {
-    const u = cleanHub(hub.value);
-    if (!u) {
-      // Fallback: show a hint rather than silently deep-linking nowhere.
-      return '#needs-hub';
-    }
-    // Deep-link handled by hub_handlers.cmd_start — payload prefix "deploy_"
-    // triggers _begin_deploy for that slug.
-    return `https://t.me/${u}?start=deploy_${slug}`;
+  function deployUrl(slug) {
+    const username = cleanHub(hub.value);
+    return username ? `https://t.me/${username}?start=deploy_${slug}` : '#needs-hub';
   }
 
-  function matches(tpl, query) {
+  function actionAttrs(url) {
+    if (url === '#needs-hub') {
+      return 'onclick="alert(\'Set your hub bot username first.\'); event.preventDefault();"';
+    }
+    return 'target="_blank" rel="noopener"';
+  }
+
+  function matches(agent, query) {
     if (!query) return true;
-    const hay = [tpl.name, tpl.slug, tpl.tagline, ...(tpl.chips || [])].join(' ').toLowerCase();
+    const hay = [agent.name, agent.slug, agent.tagline, agent.catalog_blurb, ...(agent.chips || [])].join(' ').toLowerCase();
     return hay.includes(query.toLowerCase());
   }
 
   function render() {
+    if (!manifests) return;
+    const flagship = manifests.flagship;
+    const deploy = deployUrl(flagship.deploy_slug || 'web_runner');
+    featured.innerHTML = `
+      <div class="featured-split">
+        <article class="content-card" data-reveal>
+          <div class="eyebrow">Flagship</div>
+          <div class="page-hero-identity">
+            ${icon(flagship)}
+            <div class="identity-copy">
+              <div class="identity-label">Browser workflow</div>
+              <h2 class="identity-title">${esc(flagship.name)}</h2>
+            </div>
+          </div>
+          <p class="text-lead">${esc(flagship.long_description)}</p>
+          <div class="chip-row">
+            ${(flagship.chips || []).map(chip => `<span class="chip">${esc(chip)}</span>`).join('')}
+          </div>
+          <div class="action-row">
+            <a class="btn btn-primary" href="/agents/">See the full workflow</a>
+            <a class="pill-button" href="${deploy}" ${actionAttrs(deploy)}>${deploy === '#needs-hub' ? 'Set hub to deploy' : 'Deploy Web Runner'}</a>
+          </div>
+        </article>
+        <article class="content-card" data-reveal>
+          <div class="eyebrow">Good first automations</div>
+          <div class="detail-list">
+            ${(flagship.good_for || []).slice(0, 6).map(item => `<div class="item">${esc(item)}</div>`).join('')}
+          </div>
+        </article>
+      </div>
+    `;
+
     const query = q.value.trim();
-    const visible = TEMPLATES.filter(t => matches(t, query));
-    emptyNote.style.display = visible.length === 0 ? 'block' : 'none';
-    gallery.innerHTML = '';
-    for (const t of visible) {
-      const card = document.createElement('div');
-      card.className = 'tpl-card';
-      const href = installUrl(t.slug);
-      const needsHub = href === '#needs-hub';
-      card.innerHTML = `
-        <div class="emoji">${t.emoji}</div>
-        <h3>${t.name}</h3>
-        <p>${t.tagline}</p>
-        <div class="chips">${(t.chips || []).map(c => `<span class="chip">${c}</span>`).join('')}</div>
-        ${t.example_cmd ? `<code style="font-size: 11px; background: var(--bg); padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border); color: var(--muted); display: block; margin-top: 8px;">${t.example_cmd}</code>` : ''}
-        <a
-          class="install"
-          href="${href}"
-          ${needsHub ? 'onclick="alert(\'Set your hub bot username up top first.\'); event.preventDefault();"' : 'target="_blank" rel="noopener"'}
-        >
-          ${needsHub ? '⚠ Set hub above to deploy' : 'Deploy to my CtxAnt →'}
-        </a>
+    const visible = (manifests.agents || [])
+      .filter(agent => matches(agent, query))
+      .sort((a, b) => {
+        const ai = STARTER_POSITION[a.slug] ?? 999;
+        const bi = STARTER_POSITION[b.slug] ?? 999;
+        if (ai !== bi) return ai - bi;
+        return (a.name || '').localeCompare(b.name || '');
+      });
+    empty.hidden = !!visible.length;
+    catalog.innerHTML = visible.map(agent => {
+      const deployLink = deployUrl(agent.slug);
+      return `
+        <article class="agent-card content-card" data-reveal>
+          ${icon(agent)}
+          <h3>${esc(agent.name)}</h3>
+          <p class="agent-copy">${esc(agent.tagline)}</p>
+          <div class="chip-row">
+            ${(agent.chips || []).map(chip => `<span class="chip">${esc(chip)}</span>`).join('')}
+          </div>
+          <div class="note spacious">${esc(agent.catalog_blurb || '')}</div>
+          <div class="action-row">
+            <a class="btn btn-primary" href="/templates/agent.html?slug=${encodeURIComponent(agent.slug)}">View details</a>
+            <a class="pill-button" href="${deployLink}" ${actionAttrs(deployLink)}>${deployLink === '#needs-hub' ? 'Set hub to deploy' : 'Deploy'}</a>
+          </div>
+        </article>
       `;
-      gallery.appendChild(card);
-    }
+    }).join('');
+
+    document.dispatchEvent(new Event('ctxant:refresh-reveal'));
   }
 
+  hub.value = localStorage.getItem(STORAGE_KEY) || '';
+  hub.addEventListener('input', () => {
+    localStorage.setItem(STORAGE_KEY, hub.value.trim());
+    render();
+  });
   q.addEventListener('input', render);
 
-  // Fetch templates -------------------------------------------------------
-  fetch('/templates/agents.json')
+  fetch('/templates/agent-manifests.json')
     .then(r => r.json())
-    .then(data => { TEMPLATES = data; render(); })
+    .then(data => {
+      manifests = data;
+      render();
+    })
     .catch(() => {
-      gallery.innerHTML = '<p style="color: var(--danger);">Failed to load templates.</p>';
+      featured.innerHTML = '<div class="release-empty">Failed to load the agents catalog.</div>';
     });
 </script>
-
 </body>
 </html>

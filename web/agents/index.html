@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Build Your Own Agent — CtxAnt</title>
+<meta name="description" content="Build your own browser worker in CtxAnt, give it a standing task, and run it from Telegram with your real Chrome session." />
+<link rel="icon" href="/assets/favicon.png" />
+<link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body data-page="agents">
+<div id="site-shell"></div>
+
+<main class="page-shell">
+  <section class="catalog-hero">
+    <div class="shell page-hero-card content-card" id="hero-card">
+      <div class="release-empty">Loading flagship agent…</div>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="shell" id="good-for"></div>
+  </section>
+
+  <section class="page-section">
+    <div class="shell story-layout">
+      <article class="story-panel sticky" data-reveal id="setup-summary"></article>
+      <div class="story-steps" id="setup-steps"></div>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="shell">
+      <div class="section-head" data-reveal>
+        <h2>Real example automations</h2>
+        <p>These are the kinds of jobs the flagship workflow is built for: concrete browser checks with short, reusable Telegram output.</p>
+      </div>
+      <div class="example-grid" id="examples"></div>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="shell detail-grid">
+      <article class="detail-card" data-reveal id="tips"></article>
+      <article class="detail-card" data-reveal id="limits"></article>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="/assets/site.js"></script>
+<script>
+  function esc(s) {
+    if (s == null) return '';
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function icon(agent, className = 'agent-icon') {
+    if (window.CtxAntUI && agent && agent.icon) {
+      const rendered = window.CtxAntUI.renderIcon(agent.icon, `${agent.name} icon`, className);
+      if (rendered) return rendered;
+    }
+    return `<span class="${className}">${esc(agent && agent.emoji ? agent.emoji : '•')}</span>`;
+  }
+
+  function list(items) {
+    return `<div class="detail-list">${(items || []).map(item => `<div class="item">${esc(item)}</div>`).join('')}</div>`;
+  }
+
+  fetch('/templates/agent-manifests.json')
+    .then(r => r.json())
+    .then(data => {
+      const agent = data.flagship;
+
+      document.getElementById('hero-card').innerHTML = `
+        <div class="eyebrow" data-reveal>Flagship workflow</div>
+        <div class="page-hero-identity" data-reveal>
+          ${icon(agent)}
+          <div class="identity-copy">
+            <div class="identity-label">Programmable browser agent</div>
+            <h1 class="identity-title">${esc(agent.name)}</h1>
+          </div>
+        </div>
+        <p class="lede" data-reveal>${esc(agent.long_description)}</p>
+        <div class="cta-row" data-reveal>
+          <a class="btn btn-primary" href="/install.html">Install and try it</a>
+          <a class="btn btn-secondary" href="/templates/">See preset agents</a>
+        </div>
+        <div class="meta-strip" data-reveal>
+          ${(agent.chips || []).map(chip => `<span class="meta-pill">${esc(chip)}</span>`).join('')}
+        </div>
+      `;
+
+      document.getElementById('good-for').innerHTML = `
+        <div class="section-head" data-reveal>
+          <h2>What it is good for</h2>
+          <p>This is the right tool whenever the browser is the system of record and the job is concrete enough to repeat.</p>
+        </div>
+        <div class="feature-grid">
+          ${(agent.good_for || []).map(item => `
+            <article class="feature-card" data-reveal>
+              <div class="eyebrow">Use case</div>
+              <h3>${esc(item)}</h3>
+              <p class="text-lead">Turn it into a dedicated Telegram bot, save the task once, and let the browser run it from your real logged-in session.</p>
+            </article>
+          `).join('')}
+        </div>
+      `;
+
+      document.getElementById('setup-summary').innerHTML = `
+        <div class="eyebrow">Setup loop</div>
+        <h3 class="stack-title">Standing task → test → schedule.</h3>
+        <p class="stack-copy">The fastest successful flow is always the same: define the exact browser job, test it in chat, then schedule it only after the output is clean.</p>
+      `;
+
+      document.getElementById('setup-steps').innerHTML = `
+        ${(agent.how_to_use || []).map((item, index) => `
+          <article class="story-panel story-step" data-reveal>
+            <div class="step-index">${String(index + 1).padStart(2, '0')}</div>
+            <h3>${index === 0 ? 'Create the agent from the hub' : index === 1 ? 'Set the standing task clearly' : index === 2 ? 'Use chat as the control panel' : 'Schedule it when it is stable'}</h3>
+            <p>${esc(item)}</p>
+          </article>
+        `).join('')}
+      `;
+
+      document.getElementById('examples').innerHTML = `
+        ${(agent.examples || []).map(example => `
+          <article class="example-card" data-reveal>
+            <h3>${esc(example.title)}</h3>
+            <p>${esc(example.what)}</p>
+            <div class="example-block">
+              <strong>How to set it up</strong>
+              ${list(example.setup || [])}
+            </div>
+            <div class="example-block">
+              <strong>Standing task prompt</strong>
+              <code>${esc(example.prompt || '')}</code>
+            </div>
+            ${example.schedule ? `
+              <div class="example-block">
+                <strong>Schedule</strong>
+                <code>${esc(example.schedule)}</code>
+              </div>
+            ` : ''}
+            <div class="example-block">
+              <strong>Expected DM</strong>
+              <p>${esc(example.result || '')}</p>
+            </div>
+          </article>
+        `).join('')}
+      `;
+
+      document.getElementById('tips').innerHTML = `
+        <h2>Tips for reliable runs</h2>
+        ${list(agent.tips || [])}
+      `;
+
+      document.getElementById('limits').innerHTML = `
+        <h2>Realistic limitations</h2>
+        ${list(agent.limitations || [])}
+      `;
+
+      document.querySelectorAll('[data-reveal]').forEach(node => {
+        node.classList.add('reveal');
+      });
+      document.dispatchEvent(new Event('ctxant:refresh-reveal'));
+    })
+    .catch(() => {
+      document.getElementById('hero-card').innerHTML = '<div class="release-empty">Failed to load flagship agent data.</div>';
+    });
+</script>
+</body>
+</html>

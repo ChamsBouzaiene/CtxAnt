@@ -30,6 +30,26 @@
     "featured": true
   },
   {
+    "slug": "morning_digest",
+    "emoji": "☀️",
+    "name": "Morning Digest",
+    "tagline": "Daily briefing: calendar, inbox highlights, and a few news topics in one short Telegram message.",
+    "chips": ["Digest", "Browser", "Scheduled"],
+    "example_cmd": "/schedule every day at 9am",
+    "author": "CtxAnt core",
+    "featured": true
+  },
+  {
+    "slug": "researcher",
+    "emoji": "🔎",
+    "name": "Researcher",
+    "tagline": "Opens the top sources on a topic and returns a structured summary with links.",
+    "chips": ["Research", "Browser", "One-shot"],
+    "example_cmd": "/research \"GLP-1 heart outcomes\"",
+    "author": "CtxAnt core",
+    "featured": true
+  },
+  {
     "slug": "social_poster",
     "emoji": "🐦",
     "name": "Social Poster",
@@ -40,22 +60,62 @@
     "featured": true
   },
   {
-    "slug": "researcher",
-    "emoji": "🔎",
-    "name": "Researcher",
-    "tagline": "Opens the top N sources on any topic and returns a structured summary with links.",
-    "chips": ["Browser", "One-shot"],
-    "example_cmd": "/research \"GLP-1 heart outcomes\"",
+    "slug": "lead_tracker",
+    "emoji": "🧾",
+    "name": "Lead Tracker",
+    "tagline": "Scans your CRM for warm leads that need follow-up and sends the next actions worth doing.",
+    "chips": ["CRM", "Browser", "Scheduled"],
+    "example_cmd": "/run",
     "author": "CtxAnt core",
     "featured": true
   },
   {
-    "slug": "morning_digest",
-    "emoji": "☀️",
-    "name": "Morning Digest",
-    "tagline": "Daily briefing: calendar + unread highlights + news on topics you follow.",
-    "chips": ["Email", "Browser", "Scheduled"],
-    "example_cmd": "/schedule every day at 9am",
+    "slug": "meeting_prep",
+    "emoji": "🗂",
+    "name": "Meeting Prep",
+    "tagline": "Builds a short pre-call brief from calendar, CRM, and company context.",
+    "chips": ["Meetings", "Browser", "Scheduled"],
+    "example_cmd": "/run",
+    "author": "CtxAnt core",
+    "featured": true
+  },
+  {
+    "slug": "support_triage",
+    "emoji": "🎫",
+    "name": "Support Triage",
+    "tagline": "Groups urgent support tickets so you know what needs fast human attention.",
+    "chips": ["Support", "Browser", "Scheduled"],
+    "example_cmd": "/run",
+    "author": "CtxAnt core",
+    "featured": true
+  },
+  {
+    "slug": "invoice_collector",
+    "emoji": "🧮",
+    "name": "Invoice Collector",
+    "tagline": "Checks billing portals for new invoices and summarizes what changed.",
+    "chips": ["Finance", "Browser", "Scheduled"],
+    "example_cmd": "/run",
+    "author": "CtxAnt core",
+    "featured": true
+  },
+  {
+    "slug": "marketplace_monitor",
+    "emoji": "📍",
+    "name": "Marketplace Monitor",
+    "tagline": "Watches saved marketplace searches and pings only for new matching listings.",
+    "chips": ["Marketplace", "Browser", "Scheduled"],
+    "example_cmd": "/run",
+    "author": "CtxAnt core",
+    "featured": true
+  },
+  {
+    "slug": "web_runner",
+    "emoji": "🛠",
+    "name": "Web Runner",
+    "tagline": "Your generic browser worker for any repeatable task you want to save and schedule.",
+    "chips": ["Flagship", "Browser", "Scheduled"],
+    "example_cmd": "/run",
     "author": "CtxAnt core",
     "featured": true
   }

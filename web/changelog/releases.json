@@ -1,0 +1,46 @@
+[
+  {
+    "version": "On main",
+    "date": "April 24, 2026",
+    "status": "Latest work",
+    "title": "Custom-agent marketing refresh and richer agent pages",
+    "summary": "The public site now treats Custom Agent / Web Runner as the flagship workflow, with richer agent pages on both the marketing site and the local dashboard.",
+    "sections": [
+      {
+        "title": "New",
+        "items": [
+          "Dedicated flagship page for Custom Agent / Web Runner with setup guidance, examples, and realistic limitations.",
+          "Starter-agent detail pages on the public site with commands, examples, tips, and limitations.",
+          "Dedicated localhost dashboard detail pages for both starter and custom agents.",
+          "Structured manifest data layer shared across public agent pages and the dashboard."
+        ]
+      },
+      {
+        "title": "Improved",
+        "items": [
+          "The public agents catalog now leads with the flagship custom-agent story instead of starter templates alone.",
+          "Homepage and install flow now point users more clearly toward building their own browser automation agent.",
+          "Dashboard cards now include direct access to richer per-agent detail views."
+        ]
+      }
+    ]
+  },
+  {
+    "version": "v0.1.0",
+    "date": "April 23, 2026",
+    "status": "Launch",
+    "title": "Initial public launch",
+    "summary": "CtxAnt launched as a local-first Mac app that lets users text their real browser from Telegram, with starter agents, scheduling, and a Chrome extension bridge.",
+    "sections": [
+      {
+        "title": "Shipped",
+        "items": [
+          "Hub bot plus deployable starter agents including Job Hunter, Deal Finder, Inbox Triage, Social Poster, Researcher, Morning Digest, and Web Runner.",
+          "Chrome extension pairing over localhost so the agent can drive the browser you are already signed into.",
+          "Menu-bar Mac app, onboarding wizard, local SQLite persistence, and per-agent schedules.",
+          "Static marketing site, one-line install script, and release/update feed."
+        ]
+      }
+    ]
+  }
+]

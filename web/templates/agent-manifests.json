@@ -1,0 +1,766 @@
+{
+  "flagship": {
+    "slug": "custom_agent",
+    "deploy_slug": "web_runner",
+    "icon": "custom_agent",
+    "emoji": "🛠",
+    "name": "Custom Agent / Web Runner",
+    "tagline": "Build any web automation agent in your own logged-in browser, then run it on demand or on a schedule.",
+    "chips": ["Flagship", "Browser", "Scheduled", "Custom"],
+    "catalog_blurb": "This is the real power user move: turn CtxAnt into a HubSpot agent, a lead watcher, a morning brief bot, a marketplace checker, or any repeatable browser workflow you want.",
+    "long_description": "Custom Agent / Web Runner is the programmable layer inside CtxAnt. Instead of picking a fixed preset, you define the standing task in plain English, give the bot its own Telegram chat, and let it reuse your real Chrome session for recurring work.",
+    "what_it_does": [
+      "Turns any repeatable browser workflow into a dedicated Telegram bot with its own memory, history, and schedule.",
+      "Uses your real Chrome session, so it can work inside tools you already use every day without another login dance.",
+      "Runs one-off requests when you text it, or recurring jobs when you give it a standing task plus a schedule.",
+      "Works best for monitoring, summaries, sweeps across multiple tabs, repetitive admin, and structured pull-and-report jobs."
+    ],
+    "why_flagship": [
+      "It is the closest thing to \"build your own browser employee\" in the product.",
+      "You are not stuck with the starter pack. If the workflow exists in the browser, you can usually turn it into an agent.",
+      "The standing-task model makes recurring automations simple: set it once in chat, then schedule it.",
+      "Each custom agent lives in its own Telegram chat bubble, so one workflow does not pollute another."
+    ],
+    "good_for": [
+      "Daily summaries from sites you already check manually",
+      "Lead or prospect sweeps across CRM and outreach tools",
+      "Marketplace, pricing, or listing monitoring",
+      "Cross-site admin tasks with a clear checklist",
+      "Watch-and-notify jobs that end in a short DM",
+      "Recurring browser reports with the same output format every time"
+    ],
+    "how_to_use": [
+      "From your hub bot, tap `➕ Build your own agent` and answer the five questions: nickname, emoji, one-line description, standing task, and standing preferences.",
+      "Pair it with its own Telegram bot through BotFather just like any other agent.",
+      "Open the new bot chat and use `/settings` if you want to rewrite the standing task or preferences later.",
+      "Use `/run` with no arguments to test the saved standing task, or send a fresh message to override the task for one run.",
+      "When it works the way you want, add `/schedule <when>` so it sends you the result on a cadence."
+    ],
+    "commands": [
+      {
+        "cmd": "/settings",
+        "description": "Re-do the setup flow so you can rewrite the standing task, preferences, or both."
+      },
+      {
+        "cmd": "/run",
+        "description": "Run the saved standing task now using the current browser session."
+      },
+      {
+        "cmd": "/schedule every day at 9am",
+        "description": "Turn the saved task into a recurring automation that DMs you on a schedule."
+      },
+      {
+        "cmd": "/status",
+        "description": "See what task it is configured to run and which schedules are active."
+      },
+      {
+        "cmd": "/stop",
+        "description": "Abort the current run if the task is going in the wrong direction."
+      }
+    ],
+    "examples": [
+      {
+        "title": "Morning leads digest",
+        "what": "Scan your CRM and send a short morning list of warm leads that need follow-up today.",
+        "setup": [
+          "In the Web Runner chat → `/settings`",
+          "Paste the standing task as the main job description",
+          "Add a preference like `always return the top 5 leads as bullets with name, company, and next action`",
+          "Then `/schedule every day at 9am`",
+          "It'll DM you a fresh list every morning"
+        ],
+        "prompt": "Open HubSpot, find deals in warm lead or follow-up-needed stages with no logged contact in the last 5 days, and send me the top 5 with name, company, last activity date, and the next sensible follow-up.",
+        "schedule": "/schedule every day at 9am",
+        "result": "You get a short Telegram message every morning with the leads worth acting on, instead of opening HubSpot and digging yourself."
+      },
+      {
+        "title": "Price drop watcher",
+        "what": "Watch a shortlist of product pages and notify you only when one crosses your target price.",
+        "setup": [
+          "In the Web Runner chat → `/settings`",
+          "Set the standing task to open each saved product URL, check the current price, and only report items under threshold",
+          "Store the thresholds directly in the task so the bot does not guess",
+          "Use `/schedule every 6 hours`"
+        ],
+        "prompt": "Check these pages every run: Product A at https://example.com/a under $500, Product B at https://example.com/b under $220, and Product C at https://example.com/c under $75. Only DM me when a product is at or below threshold. Include the current price and direct link.",
+        "schedule": "/schedule every 6 hours",
+        "result": "Most runs stay quiet. When a target price is hit, the DM includes the item, current price, and buy link."
+      },
+      {
+        "title": "Daily job sweep",
+        "what": "Search LinkedIn Jobs for a narrow role/location combination and send the best new matches.",
+        "setup": [
+          "In the Web Runner chat → `/settings`",
+          "Make the standing task explicit about title, location, recency, and output format",
+          "Test it once with `/run` and tighten the wording if the results are too broad",
+          "Then add `/schedule every day at 8am`"
+        ],
+        "prompt": "Open LinkedIn Jobs and look for Senior React or Frontend Engineer roles in Berlin or remote in Germany, posted in the last 24 hours. Send me the top 10 with company, location, posting age, and one-line relevance note.",
+        "schedule": "/schedule every day at 8am",
+        "result": "You get a focused shortlist in Telegram instead of re-running the same LinkedIn search every morning."
+      },
+      {
+        "title": "Competitor homepage check",
+        "what": "Visit a fixed list of competitor sites and summarize visible messaging changes or launch announcements.",
+        "setup": [
+          "In the Web Runner chat → `/settings`",
+          "List the exact URLs to inspect and define what counts as a meaningful change",
+          "Ask for one compact summary per site",
+          "Schedule it weekly or daily depending on the market"
+        ],
+        "prompt": "Check these homepages every run: example1.com, example2.com, and example3.com. Look for new hero copy, pricing page changes, visible product launches, or new CTAs. Return one bullet per site and only mention meaningful changes.",
+        "schedule": "/schedule every monday at 9am",
+        "result": "The DM reads like a lightweight competitor pulse instead of a raw scrape."
+      },
+      {
+        "title": "Marketplace listing monitor",
+        "what": "Watch a marketplace search and DM you new listings that match your filters.",
+        "setup": [
+          "In the Web Runner chat → `/settings`",
+          "Describe the exact search URL, filters, maximum price, and geography",
+          "Tell it to report only net-new interesting listings",
+          "Use a frequent schedule only if the site is stable enough"
+        ],
+        "prompt": "Open this eBay search URL every run and look for MacBook Pro 14-inch M3 listings in Germany under EUR 1500. Send me only newly seen listings worth checking, with title, price, seller condition, and direct link.",
+        "schedule": "/schedule every 4 hours",
+        "result": "You only get pinged when something new and relevant appears, not every time the page is rechecked."
+      }
+    ],
+    "tips": [
+      "Give it a narrow job with a concrete URL, filter, and output format. Broad prompts create messy runs.",
+      "Write the standing task the way you would brief an intern: site, steps, constraints, and what the final DM should look like.",
+      "Test with `/run` before adding a schedule. Tighten the task until the output is consistent.",
+      "If a site needs login, 2FA, or CAPTCHA, do that in the same Chrome profile and then rerun the task.",
+      "If the task spans multiple sites, tell it the order and what to compare, so it does not improvise."
+    ],
+    "limitations": [
+      "Sites with heavy anti-bot protection, CAPTCHAs, or frequent DOM changes can break brittle flows.",
+      "Do not schedule vague tasks like `check my business stuff`. Spell out the exact systems and success criteria.",
+      "Anything that needs judgment across a huge, messy workspace should be narrowed first, or the agent will waste steps.",
+      "High-frequency schedules on unstable sites create noisy runs and unnecessary token spend. Start slower, then tighten.",
+      "It is strong at browsing and reporting, but not a replacement for robust API integrations when those already exist."
+    ]
+  },
+  "agents": [
+    {
+      "slug": "job_hunter",
+      "icon": "job_hunter",
+      "emoji": "🧑‍💼",
+      "name": "Job Hunter",
+      "tagline": "Watches LinkedIn for roles matching your profile and sends the best new matches in a repeatable format.",
+      "chips": ["Jobs", "Browser", "Scheduled"],
+      "catalog_blurb": "A guided preset for the same kind of job-search sweep people often build manually with Web Runner.",
+      "long_description": "Job Hunter is the opinionated version of a recurring LinkedIn search. It remembers your role, cities, and CV path, then sweeps job boards for relevant openings without forcing you to restate the brief every time.",
+      "what_it_does": [
+        "Searches LinkedIn Jobs using saved role and location preferences.",
+        "Surfaces a shortlist with company, location, and why each role matches.",
+        "Keeps the output consistent so you can scan quickly.",
+        "Works well as a morning or twice-weekly market check."
+      ],
+      "how_to_use": [
+        "Deploy Job Hunter from the hub and complete the setup questions for role, cities, CV, and cadence.",
+        "Use `/run` to get the current best matches using the saved profile.",
+        "If the results are too broad, run `/settings` and tighten the role or location.",
+        "Add `/schedule every day at 8am` if you want a fresh shortlist each morning."
+      ],
+      "commands": [
+        {"cmd": "/run", "description": "Search now using your saved role and location filters."},
+        {"cmd": "/settings", "description": "Update role, cities, CV path, or cadence."},
+        {"cmd": "\"apply to 5 Senior React jobs in Berlin posted today\"", "description": "Override the default search for a one-off run with a more specific request."}
+      ],
+      "examples": [
+        {
+          "title": "Daily new-role sweep",
+          "what": "Check only the last 24 hours of relevant roles.",
+          "setup": [
+            "Complete `/settings` with your role and cities",
+            "Test `/run` once",
+            "Then add a morning schedule"
+          ],
+          "prompt": "apply to 5 Senior React jobs in Berlin posted today",
+          "schedule": "/schedule every day at 8am",
+          "result": "A Telegram shortlist of the strongest new matches instead of another manual LinkedIn session."
+        }
+      ],
+      "tips": [
+        "Keep the role name specific. `Software Engineer` is too wide for high-quality results.",
+        "Put remote rules in the setup, not only in a one-off prompt.",
+        "Use it as a shortlist generator first; only expand into auto-apply once the output quality is stable."
+      ],
+      "limitations": [
+        "Easy Apply flows vary by employer, so some roles are shortlist-only rather than one-click apply.",
+        "Login walls, recruiter prompts, and region-specific filters can interrupt runs.",
+        "Very broad job searches will create repetitive or low-signal results."
+      ]
+    },
+    {
+      "slug": "deal_finder",
+      "icon": "deal_finder",
+      "emoji": "🛒",
+      "name": "Deal Finder",
+      "tagline": "Checks saved product pages against your thresholds and pings only when something becomes worth buying.",
+      "chips": ["Shopping", "Browser", "Scheduled"],
+      "catalog_blurb": "A price-watcher preset for people who want notifications, not dashboard babysitting.",
+      "long_description": "Deal Finder is the structured version of a shopping-watch workflow. You give it product URLs and target prices, and it repeatedly checks those pages so you do not have to remember them.",
+      "what_it_does": [
+        "Opens your saved product URLs and reads the visible price.",
+        "Compares what it sees to the thresholds you configured.",
+        "Sends compact updates when a price is interesting enough to act on.",
+        "Works well for electronics, tickets, niche hardware, and restocks."
+      ],
+      "how_to_use": [
+        "Deploy it from the hub, then save URLs and max prices in setup.",
+        "Run `/run` once to make sure the product pages are readable.",
+        "Schedule it every few hours or once a day depending on how volatile the market is."
+      ],
+      "commands": [
+        {"cmd": "/run", "description": "Check all saved watchlist items immediately."},
+        {"cmd": "/settings", "description": "Edit watchlist URLs or price thresholds."},
+        {"cmd": "\"check this GPU page again and tell me only if it drops below 500\"", "description": "Do a one-off override for a single product or temporary threshold."}
+      ],
+      "examples": [
+        {
+          "title": "GPU deal watch",
+          "what": "Keep tabs on a high-ticket purchase without checking five stores yourself.",
+          "setup": [
+            "Add the retailer URLs in setup",
+            "Set your maximum buy price",
+            "Schedule frequent but sane checks"
+          ],
+          "prompt": "check this GPU page again and tell me only if it drops below 500",
+          "schedule": "/schedule every 6 hours",
+          "result": "Most runs stay quiet; the useful ones arrive with the current price and direct link."
+        }
+      ],
+      "tips": [
+        "Use direct product URLs, not homepage or category links.",
+        "Set a real buy threshold so the bot can stay quiet until something matters.",
+        "If a site shows prices only after login, sign in in the same Chrome profile first."
+      ],
+      "limitations": [
+        "Some stores change page structure or use geo-specific pricing widgets that can confuse the run.",
+        "Stock status and shipping costs may not be visible the same way on every site.",
+        "Too-frequent schedules are noisy and rarely worth the extra spend."
+      ]
+    },
+    {
+      "slug": "inbox_triage",
+      "icon": "inbox_triage",
+      "emoji": "📧",
+      "name": "Inbox Triage",
+      "tagline": "Sorts unread mail into reply, skim, and archive buckets so you can clear an inbox faster.",
+      "chips": ["Email", "Browser", "Triage"],
+      "catalog_blurb": "A structured inbox sweep for people who want a decision queue instead of raw unread count.",
+      "long_description": "Inbox Triage turns a messy unread inbox into a short action list. It is built for people who want the important messages surfaced first without trusting the bot to fully manage the inbox blindly.",
+      "what_it_does": [
+        "Scans recent unread messages in Gmail or a similar provider.",
+        "Separates obvious reply-needed messages from skim-only or archive-worthy mail.",
+        "Highlights VIP senders using the priority list you save.",
+        "Returns a compact structured summary instead of a mailbox dump."
+      ],
+      "how_to_use": [
+        "Run setup and save your provider plus any never-miss senders.",
+        "Use `/run` when your inbox feels heavy.",
+        "If the classification is too loose, add more precise VIP senders in `/settings`."
+      ],
+      "commands": [
+        {"cmd": "/run", "description": "Triages your recent unread messages now."},
+        {"cmd": "/settings", "description": "Update provider, VIP senders, or preferred cadence."},
+        {"cmd": "\"triage only mail from the last 12 hours\"", "description": "Temporarily narrow the run for a busier-than-usual inbox."}
+      ],
+      "examples": [
+        {
+          "title": "Morning inbox reset",
+          "what": "Get a short action list before opening Gmail yourself.",
+          "setup": [
+            "Save your inbox provider and priority senders",
+            "Test `/run` once",
+            "Optionally schedule it every workday morning"
+          ],
+          "prompt": "triage only mail from the last 12 hours",
+          "schedule": "/schedule every day at 8am",
+          "result": "You get the few reply-worthy emails first, plus a skim/archive bucket for the rest."
+        }
+      ],
+      "tips": [
+        "Give it a short list of truly important senders. That improves the signal fast.",
+        "Use it as a decision aid, not a silent auto-archiver, until you trust the behavior.",
+        "Keep the summary short; a triage bot should reduce reading, not create more."
+      ],
+      "limitations": [
+        "Complex threads, forwarded chains, and newsletter hybrids can be ambiguous.",
+        "If your inbox is full of edge cases, the categories will need occasional cleanup.",
+        "It can summarize what matters, but it should not send replies unless you explicitly expand the workflow."
+      ]
+    },
+    {
+      "slug": "social_poster",
+      "icon": "social_poster",
+      "emoji": "🐦",
+      "name": "Social Poster",
+      "tagline": "Adapts one draft across several social platforms and helps you post faster without rewriting from scratch.",
+      "chips": ["Social", "Browser", "Multi-tab"],
+      "catalog_blurb": "A multi-tab posting preset for people who ship the same idea everywhere with slightly different formatting.",
+      "long_description": "Social Poster is built for people who post the same update to multiple networks. It opens each platform, adapts the copy to the channel, and either drafts or posts depending on the approval setting.",
+      "what_it_does": [
+        "Takes one input message and adapts it across several social platforms.",
+        "Handles tab-by-tab posting or draft preparation.",
+        "Works best for launch posts, distribution, and repeatable content workflows.",
+        "Lets you require approval before anything goes live."
+      ],
+      "how_to_use": [
+        "Choose your platforms and approval mode in setup.",
+        "Send a draft message directly in the bot chat or use `/run` style instructions.",
+        "If you want a tighter voice, update the preferred tone in `/settings`."
+      ],
+      "commands": [
+        {"cmd": "\"post shipping v1 today\"", "description": "Use the current message as the content source and adapt it to each platform."},
+        {"cmd": "/settings", "description": "Change platforms, approval mode, or tone."},
+        {"cmd": "/run", "description": "Reuse the saved behavior for a standing posting workflow if you have one."}
+      ],
+      "examples": [
+        {
+          "title": "Launch-day blast",
+          "what": "Spread one announcement across several networks without manually rewriting it five times.",
+          "setup": [
+            "Save platforms and approval preference",
+            "Paste the announcement in chat",
+            "Approve before posting if you want human review"
+          ],
+          "prompt": "post shipping v1 today",
+          "schedule": "",
+          "result": "The bot adapts the same announcement for each platform and either drafts or posts it."
+        }
+      ],
+      "tips": [
+        "Keep the source post simple and factual. The agent can adapt tone, but not invent product truth.",
+        "Approval mode is the safe default until you trust how each platform is handled.",
+        "Use it for repeatable distribution, not for highly creative writing that needs heavy iteration."
+      ],
+      "limitations": [
+        "Composer UIs change often, especially on fast-moving social products.",
+        "Login prompts, 2FA, or media upload quirks can interrupt runs.",
+        "Platform-specific edge cases still need a human eye on important posts."
+      ]
+    },
+    {
+      "slug": "researcher",
+      "icon": "researcher",
+      "emoji": "🔎",
+      "name": "Researcher",
+      "tagline": "Sweeps multiple sources, then returns a compact structured brief with links you can act on.",
+      "chips": ["Research", "Browser", "One-shot"],
+      "catalog_blurb": "A browsing-heavy preset for source gathering, comparison, and concise summaries.",
+      "long_description": "Researcher is for questions that need a quick source sweep rather than one answer from memory. It browses, reads, and then sends you a structured synthesis with citations.",
+      "what_it_does": [
+        "Searches across relevant sites and opens multiple sources.",
+        "Summarizes findings in a consistent format with source links.",
+        "Works well for market scans, product comparisons, and topic briefs.",
+        "Can be shallow and fast or a little deeper depending on setup."
+      ],
+      "how_to_use": [
+        "Set your default depth and output format in `/settings`.",
+        "Send a topic in chat when you need a one-off brief.",
+        "Use a one-line framing constraint like `compare pricing` or `focus on clinical results` for better output."
+      ],
+      "commands": [
+        {"cmd": "\"research GLP-1 heart outcomes\"", "description": "Run a focused multi-source brief on the topic."},
+        {"cmd": "/settings", "description": "Change depth or preferred output format."},
+        {"cmd": "/run", "description": "Reuse the currently saved defaults for a new research topic."}
+      ],
+      "examples": [
+        {
+          "title": "Quick market brief",
+          "what": "Pull a same-day research snapshot before a meeting.",
+          "setup": [
+            "Choose the default depth in `/settings`",
+            "Send the topic as a plain message",
+            "Ask for a comparison or summary format"
+          ],
+          "prompt": "research GLP-1 heart outcomes",
+          "schedule": "",
+          "result": "You get a short brief with citations instead of bouncing through tabs yourself."
+        }
+      ],
+      "tips": [
+        "The narrower the topic framing, the more useful the summary.",
+        "Ask for an output format up front if you need a table or bullet brief.",
+        "Use this for browsing-based research, not for facts that are already obvious from one source."
+      ],
+      "limitations": [
+        "Source quality still matters; it can summarize weak sources if the prompt is too open-ended.",
+        "Deep research across many tabs costs more and takes longer.",
+        "It is strong at synthesis, but not a substitute for expert judgment on high-stakes topics."
+      ]
+    },
+    {
+      "slug": "lead_tracker",
+      "icon": "lead_tracker",
+      "emoji": "🧾",
+      "name": "Lead Tracker",
+      "tagline": "Checks your CRM for warm leads that have gone stale and sends the next follow-ups worth doing today.",
+      "chips": ["CRM", "Browser", "Scheduled"],
+      "catalog_blurb": "A focused CRM sweep for operators who want follow-up lists, not another dashboard to babysit.",
+      "long_description": "Lead Tracker is the preset for recurring CRM follow-up reviews. It opens the CRM you already use, finds leads in the stages you care about, and returns a short action list when activity has gone cold.",
+      "what_it_does": [
+        "Scans a CRM such as HubSpot, Salesforce, or Pipedrive for warm leads that have not moved recently.",
+        "Returns a short list with lead name, company, last activity date, and a suggested next action.",
+        "Works well as a daily or weekday pipeline check for founders, sales reps, and operators.",
+        "Keeps the output compact enough to act on directly from Telegram."
+      ],
+      "how_to_use": [
+        "Deploy Lead Tracker from the hub and save the CRM, target stages, stale window, and output format in setup.",
+        "Run `/run` once to confirm the CRM view and filters match how your pipeline is organized.",
+        "If it surfaces too many leads, narrow the stages or stale threshold in `/settings`.",
+        "When the shortlist looks right, schedule it for the morning and use it as your follow-up queue."
+      ],
+      "commands": [
+        {"cmd": "/run", "description": "Sweep the CRM now using your saved stages and stale-window rules."},
+        {"cmd": "/settings", "description": "Update CRM, target stages, stale threshold, or summary format."},
+        {"cmd": "\"check only enterprise leads with no reply in 7 days\"", "description": "Override the saved setup for a one-off follow-up sweep."}
+      ],
+      "examples": [
+        {
+          "title": "Daily warm-lead sweep",
+          "what": "Find the leads that have slipped long enough to need a nudge today.",
+          "setup": [
+            "Save the CRM and warm stages in `/settings`",
+            "Set the stale window to 5 or 7 days",
+            "Test `/run` once, then schedule it for the morning"
+          ],
+          "prompt": "check only enterprise leads with no reply in 7 days",
+          "schedule": "/schedule every day at 9am",
+          "result": "A compact DM with the most overdue follow-ups, including who to contact and why they surfaced."
+        }
+      ],
+      "tips": [
+        "Keep the target stages narrow. `All open deals` is usually too broad to be useful.",
+        "Use a real stale window so the bot can stay opinionated instead of returning every warm lead.",
+        "Ask for one recommended next action per lead if you want it to feel closer to a ready-made task list."
+      ],
+      "limitations": [
+        "It depends on your CRM being consistently updated; stale notes or messy stages reduce the signal.",
+        "Very large pipelines need tighter filters or the result turns into a wall of names.",
+        "It can surface good candidates, but the actual follow-up message still needs human judgment."
+      ]
+    },
+    {
+      "slug": "meeting_prep",
+      "icon": "meeting_prep",
+      "emoji": "🗂",
+      "name": "Meeting Prep",
+      "tagline": "Builds a short pre-call brief from calendar, CRM, and company context before you join the meeting.",
+      "chips": ["Meetings", "Browser", "Scheduled"],
+      "catalog_blurb": "A pre-meeting briefing preset for people who want context before a call without opening five tabs.",
+      "long_description": "Meeting Prep is the preset for turning scattered account context into a crisp brief. It uses your calendar and the tools you already keep notes in to gather the essentials before a meeting starts.",
+      "what_it_does": [
+        "Checks upcoming meetings, identifies the relevant account or contact, and gathers context from the sources you choose.",
+        "Returns a short briefing with the sections you care about most, such as background, open questions, and recent activity.",
+        "Works well before sales calls, customer check-ins, hiring interviews, or partnership meetings.",
+        "Helps you reuse your real logged-in browser instead of rebuilding the same prep process manually."
+      ],
+      "how_to_use": [
+        "Save your calendar source, prep timing, and context sources in setup.",
+        "Use `/run` to generate a briefing for the next meeting and check whether the structure feels right.",
+        "If the summaries are too generic, tighten the required briefing sections in `/settings`.",
+        "Once the brief quality is stable, schedule it around your usual meeting rhythm."
+      ],
+      "commands": [
+        {"cmd": "/run", "description": "Prepare a brief for the next relevant meeting now."},
+        {"cmd": "/settings", "description": "Update the calendar source, prep timing, or briefing sections."},
+        {"cmd": "\"prep the 2pm Acme call with deal notes and open risks\"", "description": "Run a one-off briefing with a more specific meeting focus."}
+      ],
+      "examples": [
+        {
+          "title": "Customer call briefing",
+          "what": "Send a short brief before a call so you start with the account context fresh.",
+          "setup": [
+            "Save Google Calendar and the CRM in `/settings`",
+            "Choose the sections you want in every brief",
+            "Test `/run`, then attach a schedule once the structure feels reliable"
+          ],
+          "prompt": "prep the 2pm Acme call with deal notes and open risks",
+          "schedule": "/schedule every weekday at 8am",
+          "result": "A short Telegram briefing with meeting context, recent notes, and what is most likely to matter on the call."
+        }
+      ],
+      "tips": [
+        "Give it a fixed brief structure. Free-form prep tends to be less reliable than a named set of sections.",
+        "Use sources that already contain the truth, such as CRM notes and company pages, not vague memory prompts.",
+        "This works best when the meeting title or attendees clearly map to an account or company."
+      ],
+      "limitations": [
+        "Messy calendars or unclear meeting titles make it harder to identify the right context automatically.",
+        "If the CRM and calendar do not line up cleanly, you may need to ask for a one-off targeted brief instead.",
+        "It is designed for concise prep, not full account research."
+      ]
+    },
+    {
+      "slug": "support_triage",
+      "icon": "support_triage",
+      "emoji": "🎫",
+      "name": "Support Triage",
+      "tagline": "Scans a support queue for urgent or high-risk tickets and groups what needs fast human attention.",
+      "chips": ["Support", "Browser", "Scheduled"],
+      "catalog_blurb": "A support-ops preset for surfacing the tickets that matter before they turn into escalations.",
+      "long_description": "Support Triage is the preset for high-signal queue sweeps. It logs into your helpdesk, applies your urgency rules, and returns the short list of conversations that need a human response soonest.",
+      "what_it_does": [
+        "Scans tools like Zendesk, Intercom, or Help Scout for tickets matching your urgency rules.",
+        "Groups tickets into a simple action-oriented summary such as critical, soon, and watchlist.",
+        "Highlights VIP customers or clear blockers without forcing you to read the entire queue.",
+        "Works best as an hourly or start-of-day support operations sweep."
+      ],
+      "how_to_use": [
+        "Save the support platform, urgency rules, and any VIP accounts in setup.",
+        "Run `/run` to see whether the triage logic surfaces the right tickets first.",
+        "If the queue is too noisy, tighten the urgency rules rather than increasing the output length.",
+        "Once the signal is good, schedule it and treat the DM as the support handoff list."
+      ],
+      "commands": [
+        {"cmd": "/run", "description": "Scan the queue now using your saved urgency rules."},
+        {"cmd": "/settings", "description": "Update the support platform, VIP accounts, or triage format."},
+        {"cmd": "\"show only billing or outage tickets from enterprise accounts\"", "description": "Run a narrower one-off sweep when the queue is crowded."}
+      ],
+      "examples": [
+        {
+          "title": "Hourly urgent-ticket sweep",
+          "what": "Keep the queue under control without refreshing the helpdesk all day.",
+          "setup": [
+            "Save the support platform and urgency rules in `/settings`",
+            "Run `/run` once to tune the signal",
+            "Schedule it only after the triage buckets feel right"
+          ],
+          "prompt": "show only billing or outage tickets from enterprise accounts",
+          "schedule": "/schedule every hour",
+          "result": "A short DM with the tickets most likely to breach SLA or need a fast human response."
+        }
+      ],
+      "tips": [
+        "Write concrete urgency rules. `Important tickets` is too vague to produce a stable queue summary.",
+        "Keep the VIP list short so the bot can stay opinionated about what must be seen quickly.",
+        "Use a grouped output like `critical / soon / watchlist` to make the result easier to act on."
+      ],
+      "limitations": [
+        "Support queues are messy; long threads and nuanced sentiment can still need human review.",
+        "If the tool hides key context behind nested panels, the run may miss details without a narrower prompt.",
+        "It is designed for triage and escalation awareness, not for drafting final support replies."
+      ]
+    },
+    {
+      "slug": "invoice_collector",
+      "icon": "invoice_collector",
+      "emoji": "🧮",
+      "name": "Invoice Collector",
+      "tagline": "Logs into vendor billing portals, checks for new invoices, and summarizes what changed since the last run.",
+      "chips": ["Finance", "Browser", "Scheduled"],
+      "catalog_blurb": "A recurring billing-ops preset for people who still gather invoices from a patchwork of vendor portals.",
+      "long_description": "Invoice Collector is the preset for recurring billing portal checks. It uses your real logged-in browser to visit vendor billing pages, find what is new, and return a short summary instead of making you reopen each portal manually.",
+      "what_it_does": [
+        "Checks the vendor portals you save and looks for newly available invoices or receipts.",
+        "Summarizes the fields you care about, such as invoice number, amount, and due date.",
+        "Works well for finance ops, bookkeeping prep, or founder-mode admin.",
+        "Can help you spot missing downloads or unusual charges before they pile up."
+      ],
+      "how_to_use": [
+        "Save the vendor names, billing URLs, and the invoice fields you care about in setup.",
+        "Run `/run` once to verify the portals and fields are readable from your current browser session.",
+        "Choose whether you want summary-only behavior or download-aware behavior in `/settings`.",
+        "When the run is stable, schedule it daily or weekly depending on your billing rhythm."
+      ],
+      "commands": [
+        {"cmd": "/run", "description": "Check the saved billing portals and summarize what is new."},
+        {"cmd": "/settings", "description": "Update vendors, extracted fields, or download behavior."},
+        {"cmd": "\"check Stripe and OpenAI only and tell me what is new since Friday\"", "description": "Run a narrower one-off billing sweep for selected vendors."}
+      ],
+      "examples": [
+        {
+          "title": "Weekly vendor billing sweep",
+          "what": "Collect the most recent invoices without logging into each portal yourself.",
+          "setup": [
+            "Save the billing URLs and desired invoice fields in `/settings`",
+            "Test `/run` once against the current portals",
+            "Add a weekly schedule once the summary is clean"
+          ],
+          "prompt": "check Stripe and OpenAI only and tell me what is new since Friday",
+          "schedule": "/schedule every monday at 9am",
+          "result": "A concise DM listing which invoices appeared, their amounts, and any vendor that still needs manual attention."
+        }
+      ],
+      "tips": [
+        "List vendor names and URLs explicitly. Billing portals are easier to automate when the path is fixed.",
+        "Keep the extracted fields tight so the output reads like a finance summary instead of a scrape.",
+        "Use it first as a monitor, then add downloads only after the portal structure feels stable."
+      ],
+      "limitations": [
+        "Some vendors change billing layouts often or gate downloads behind extra confirmation flows.",
+        "If PDFs open in a new browser viewer, download-aware flows can need extra tuning.",
+        "It helps with collection and summary, but it is not a replacement for accounting software."
+      ]
+    },
+    {
+      "slug": "marketplace_monitor",
+      "icon": "marketplace_monitor",
+      "emoji": "📍",
+      "name": "Marketplace Monitor",
+      "tagline": "Watches saved marketplace searches and pings only when a genuinely new matching listing appears.",
+      "chips": ["Marketplace", "Browser", "Scheduled"],
+      "catalog_blurb": "A listing-watch preset for people who want signal from noisy marketplace search pages.",
+      "long_description": "Marketplace Monitor is the preset for recurring listing searches. It rechecks the marketplace URLs you care about, applies your price and geography rules, and returns only the listings worth attention.",
+      "what_it_does": [
+        "Opens saved marketplace search URLs and checks for new listings that match your rules.",
+        "Supports price and geography constraints so the result stays narrow enough to act on quickly.",
+        "Works well for equipment hunting, used electronics, apartments, furniture, and niche listings.",
+        "Keeps the output quiet until there is something new to look at."
+      ],
+      "how_to_use": [
+        "Save the search URLs, budget, and location rules in setup.",
+        "Run `/run` to confirm the marketplace layout is readable and the results are not too broad.",
+        "If the matches feel noisy, tighten the search URL itself before adding a frequent schedule.",
+        "Use a recurring schedule only after the search is stable enough to return net-new useful listings."
+      ],
+      "commands": [
+        {"cmd": "/run", "description": "Recheck the saved marketplace searches immediately."},
+        {"cmd": "/settings", "description": "Update search URLs, budget, geography, or freshness rules."},
+        {"cmd": "\"watch this eBay search and only ping net-new listings under 1500 in Germany\"", "description": "Run a one-off marketplace watch with explicit price and geography constraints."}
+      ],
+      "examples": [
+        {
+          "title": "Used laptop listing monitor",
+          "what": "Track a search and only get pinged when a new relevant listing appears.",
+          "setup": [
+            "Save the search URL and your maximum price in `/settings`",
+            "Run `/run` once to check the marketplace layout",
+            "Use a 4- or 8-hour schedule once the search is clean"
+          ],
+          "prompt": "watch this eBay search and only ping net-new listings under 1500 in Germany",
+          "schedule": "/schedule every 4 hours",
+          "result": "A quiet DM stream that only lights up when a new, relevant listing appears with its price and link."
+        }
+      ],
+      "tips": [
+        "Let the marketplace URL carry as much filtering as possible before the bot even opens the page.",
+        "Use `net-new only` as the default freshness rule unless you truly care about every recheck.",
+        "High-frequency schedules make sense only if the category moves fast and the page layout is stable."
+      ],
+      "limitations": [
+        "Listings disappear, reorder, or change title text often, so marketplace runs can be noisy without tight filters.",
+        "Some sites aggressively gate or reshuffle results, which makes frequent monitoring less reliable.",
+        "This is strongest for alerting and shortlist creation, not for negotiating or buying automatically."
+      ]
+    },
+    {
+      "slug": "morning_digest",
+      "icon": "morning_digest",
+      "emoji": "☀️",
+      "name": "Morning Digest",
+      "tagline": "Combines calendar, inbox highlights, and topic news into a short daily brief.",
+      "chips": ["Digest", "Browser", "Scheduled"],
+      "catalog_blurb": "A daily briefing preset for people who want one morning message instead of three separate checks.",
+      "long_description": "Morning Digest is the preset for a calm start-of-day message. It blends a few predictable sources into a single DM so you can scan your day in one place.",
+      "what_it_does": [
+        "Checks calendar, inbox, and saved topics in one pass.",
+        "Returns a short morning message rather than a long report.",
+        "Works best as a recurring schedule with a strict word budget.",
+        "Reduces context-switching across several apps before the day starts."
+      ],
+      "how_to_use": [
+        "Save your topics and send time in setup.",
+        "Run `/run` once to see whether the digest length and focus feel right.",
+        "Schedule it for a fixed morning hour after the test output looks good."
+      ],
+      "commands": [
+        {"cmd": "/run", "description": "Send today’s digest immediately."},
+        {"cmd": "/settings", "description": "Update topics or preferred send time."},
+        {"cmd": "/schedule every day at 9am", "description": "Turn the digest into a daily recurring DM."}
+      ],
+      "examples": [
+        {
+          "title": "Workday briefing",
+          "what": "One Telegram message with the top things to know before opening five tools.",
+          "setup": [
+            "Save your news topics and preferred send time",
+            "Test with `/run`",
+            "Then schedule it for the morning"
+          ],
+          "prompt": "/schedule every day at 9am",
+          "schedule": "/schedule every day at 9am",
+          "result": "A daily concise briefing with meetings, important mail, and topic headlines."
+        }
+      ],
+      "tips": [
+        "Keep the topics list tight; too many themes turn the digest into a wall of text.",
+        "Treat it like a briefing, not a research report.",
+        "If the message is too long, narrow the topics or raise the bar for what counts as important."
+      ],
+      "limitations": [
+        "Digest quality drops if your inbox and news interests are too broad.",
+        "It is designed for short summaries, not full article analysis.",
+        "Calendar and inbox access still depend on being logged in in the same browser profile."
+      ]
+    },
+    {
+      "slug": "web_runner",
+      "icon": "custom_agent",
+      "emoji": "🛠",
+      "name": "Web Runner",
+      "tagline": "Your generic web hand: save a standing browser task, test it in chat, then schedule it like an automation.",
+      "chips": ["Flagship", "Browser", "Scheduled"],
+      "catalog_blurb": "The built-in shortcut to the flagship workflow: a reusable browser bot you can point at almost any repeatable task.",
+      "long_description": "Web Runner is the starter-agent version of the flagship custom-agent idea. It is what you use when the task is not one of the prebuilt presets. You give it a standing task, test the result, and then schedule it when the output is stable.",
+      "what_it_does": [
+        "Lets you save an arbitrary browser workflow as a standing task.",
+        "Runs that task on demand with `/run` or on a schedule with `/schedule`.",
+        "Uses the same real browser session as the rest of CtxAnt, so it can work where you are already signed in.",
+        "Works best for monitoring, summaries, repeated checks, and structured multi-step browsing."
+      ],
+      "how_to_use": [
+        "In the Web Runner chat, use `/settings` to set the standing task and any preferences.",
+        "Paste the exact task in plain English, including URLs, filters, and the format of the DM you want back.",
+        "Run `/run` once or twice until the result is clean and repeatable.",
+        "Add `/schedule <when>` only after the manual test output looks right."
+      ],
+      "commands": [
+        {"cmd": "/settings", "description": "Save or rewrite the standing task and preferences."},
+        {"cmd": "/run", "description": "Run the current saved task using your standing setup."},
+        {"cmd": "/schedule every day at 9am", "description": "Turn the saved standing task into a recurring automation."},
+        {"cmd": "\"check my eBay auction every 30 min\"", "description": "Send a one-off override request in plain English without changing the saved standing task."}
+      ],
+      "examples": [
+        {
+          "title": "Fresh list every morning",
+          "what": "Save a recurring browser report and let the bot DM it on a schedule.",
+          "setup": [
+            "In the Web Runner chat → `/settings`",
+            "Paste the prompt as the standing task",
+            "Then `/schedule every day at 9am` — it'll DM you a fresh list every morning"
+          ],
+          "prompt": "Open LinkedIn Jobs, find Senior React Engineer roles in Berlin or remote Germany posted in the last 24 hours, and send me the top 10 with company, location, and one-line reason they match.",
+          "schedule": "/schedule every day at 9am",
+          "result": "You wake up to a focused list in Telegram instead of rebuilding the same search each day."
+        },
+        {
+          "title": "Auction monitor",
+          "what": "Watch a listing or search result and ping only when the status changes.",
+          "setup": [
+            "Save the listing URL and condition to watch for",
+            "Test it with `/run`",
+            "Add a schedule after the first clean result"
+          ],
+          "prompt": "check my eBay auction every 30 min",
+          "schedule": "/schedule every 30 minutes",
+          "result": "The DM gives you the latest price/status without reopening the site yourself."
+        }
+      ],
+      "tips": [
+        "State the exact site and desired output format in the standing task.",
+        "If the bot should pause at a blocker, say so explicitly in preferences.",
+        "Good Web Runner tasks are concrete and repetitive. Treat it like a reusable playbook, not a vague assistant."
+      ],
+      "limitations": [
+        "Brittle selectors, anti-bot pages, CAPTCHAs, and login interruptions can still break a run.",
+        "If the standing task is too open-ended, the bot will spend time exploring instead of executing cleanly.",
+        "High-frequency schedules should be reserved for workflows that genuinely change that often."
+      ]
+    }
+  ]
+}

@@ -3,7 +3,7 @@
 Ready-to-paste copy for each channel. All variants say the same thing in the voice of that channel. Don't get cute — the product speaks for itself once someone presses Install.
 
 **Core positioning sentence (reuse everywhere):**
-> Other AI agents open a fresh browser that doesn't know you. CtxAnt drives *your* Chrome — logged into *your* accounts, looking at *your* tabs — and you message it from Telegram.
+> Other AI agents open a fresh browser that doesn't know you. CtxAnt drives *your* Chrome — logged into *your* accounts, looking at *your* tabs — and you message it from Telegram. Build a custom agent for any workflow in 30 seconds: describe the task, pair a bot, done.
 
 **Where to link:** always to `ctxant.com`. Never straight to the DMG unless you're in a reply explaining the install.
 
@@ -14,7 +14,7 @@ Ready-to-paste copy for each channel. All variants say the same thing in the voi
 ## Product Hunt
 
 **Tagline (60 char max):**
-> Text your browser anything. AI sidekick that drives your Chrome.
+> Text any agent. Or build your own in 30 seconds.
 
 **Alternative tagline:**
 > The AI agent that uses your browser, not its own
@@ -22,9 +22,11 @@ Ready-to-paste copy for each channel. All variants say the same thing in the voi
 **Topics:** Artificial Intelligence, Productivity, Chrome Extensions, macOS, Telegram Bots
 
 **Description (first paragraph is the hook shown in the feed):**
-> CtxAnt is an AI sidekick that lives in your Chrome and takes orders from Telegram. Unlike cloud agents that open a fresh browser, CtxAnt uses *your* real Chrome — logged into your accounts, looking at your tabs, with full access to your life behind the login wall.
+> CtxAnt is an AI sidekick that lives in your Chrome and takes orders from Telegram. Unlike cloud agents that open a fresh browser, CtxAnt uses *your* real Chrome — logged into your accounts, looking at your tabs, with access to the sites you explicitly ask it to operate on behind the login wall.
 >
-> Install the Mac app and Chrome extension in two minutes, pick a starter agent from a gallery (Job Hunter, Deal Finder, Inbox Triage, Researcher, Social Poster, Morning Digest), answer 3–5 guided questions, and you get a dedicated Telegram bot that works for you. Each agent has its own chat bubble and its own memory. Scheduled runs DM you when the work is done.
+> **Build your own agents in 30 seconds.** Need a HubSpot agent that follows up on warm leads every morning? A LinkedIn agent that saves new Sales Navigator hits to a sheet? An Instagram agent that reposts your best tweets? Tap ➕ Build your own, describe the task, pair a Telegram bot. Each custom agent has its own memory, schedule, and chat bubble.
+>
+> Or start from 12 ready-made starters (Job Hunter, Deal Finder, Inbox Triage, Morning Digest, Researcher, Social Poster, Lead Tracker, Meeting Prep, Support Triage, Invoice Collector, Marketplace Monitor, Web Runner). Either way, answer a few questions and you get a dedicated Telegram bot that works for you. Scheduled runs DM you when the work is done.
 >
 > Everything runs locally. BYOK (xAI or Anthropic), no CtxAnt server, no analytics. Your `.env` never leaves your machine. Typical cost: under $2/month.
 >
@@ -79,7 +81,9 @@ Ready-to-paste copy for each channel. All variants say the same thing in the voi
 >
 > Not a sandbox. My actual browser — logged into my stuff, looking at my tabs. Driven from Telegram.
 >
-> It's called CtxAnt. Mac + Chrome, free, ships today.
+> Build a HubSpot / LinkedIn / Instagram agent in 30 sec. Or pick a starter.
+>
+> CtxAnt. Mac + Chrome, free, ships today.
 >
 > [GIF: /morning command → 400 unreads shrink to 3 bullets]
 
@@ -155,6 +159,15 @@ Ready-to-paste copy for each channel. All variants say the same thing in the voi
 >
 > [GIF: morning ping arriving on the lock screen]
 
+**Tweet 11 (build-your-own, include a wizard screen-recording GIF):**
+> The thing I'm proudest of: you can build your own agent in 30 seconds.
+>
+> Tap ➕ Build your own → answer 5 questions → pair a Telegram bot → done.
+>
+> HubSpot agent. LinkedIn agent. Instagram agent. Whatever you need. Each one gets its own memory, schedule, chat bubble.
+>
+> [GIF: wizard walkthrough, 5 bubbles, new bot appears]
+
 ---
 
 ## Reddit
@@ -216,7 +229,7 @@ Body:
 >
 > Core idea: cloud AI agents open a sandboxed browser that doesn't know you. CtxAnt uses *your* Chrome with your logins, driven from Telegram. Feels less like "using an AI product" and more like having a coworker.
 >
-> Pick an agent from a gallery (Job Hunter, Deal Finder, Inbox Triage, Researcher, Social Poster, Morning Digest), answer a few setup questions, and a dedicated Telegram bot starts working for you.
+> Pick an agent from a gallery (Job Hunter, Deal Finder, Inbox Triage, Morning Digest, Researcher, Social Poster, Lead Tracker, Meeting Prep, Support Triage, Invoice Collector, Marketplace Monitor, Web Runner), answer a few setup questions, and a dedicated Telegram bot starts working for you.
 >
 > Mac app + Chrome extension. Free and open source. BYOK.
 >
@@ -250,6 +263,9 @@ Body:
 > **The shape:**
 > One hub bot plus one dedicated bot per agent you deploy. Job Hunter is its own bot. Deal Finder is its own bot. Each has its own chat bubble and its own memory of who you are (CV, target role, watchlist, tone). It feels genuinely different from talking to one mega-bot.
 >
+> **The factory:**
+> The real unlock is you can build your own agents in 30 seconds — tap ➕, describe the task (HubSpot follow-ups, LinkedIn Sales Nav saves, Instagram reposts, whatever), pair a Telegram bot. Each custom agent is fully isolated. Deploy as many as you want.
+>
 > **The model:**
 > BYOK. You bring xAI or Anthropic. I don't touch your data — there is no CtxAnt server, just the Mac app talking to the provider directly from your machine. Typical user spend is under $2/month.
 >
@@ -263,10 +279,10 @@ Body:
 ## BetaList
 
 **One-liner:**
-> The AI sidekick that drives your real Chrome, controlled from Telegram.
+> Text any agent. Or build your own in 30 seconds. Your Chrome, controlled from Telegram.
 
 **Description:**
-> Install the CtxAnt Mac app + Chrome extension in two minutes, deploy a starter agent (Job Hunter, Deal Finder, Inbox Triage, etc.), and get a dedicated Telegram bot that uses your real browser with your real logins. Scheduled runs, multi-tab parallelism, BYOK, no CtxAnt server. Mac now, Windows soon.
+> Install the CtxAnt Mac app + Chrome extension in two minutes. Pick a starter agent (Job Hunter, Deal Finder, Inbox Triage, …) or **build your own** — describe the task in 5 quick answers and deploy a dedicated Telegram bot for it (HubSpot, LinkedIn, Instagram, whatever you need). Each agent uses your real browser with your real logins. Scheduled runs, multi-tab parallelism, BYOK, no CtxAnt server. Mac now, Windows soon.
 
 ---
 
@@ -308,8 +324,8 @@ For the hero video on ctxant.com. Voiceover, screen recording, no talking head.
 - DMG size: ~45 MB
 - Time to first working agent, fresh Mac: under 5 min
 - Average user monthly AI cost: under $2
-- Tools the agent has: screenshot, navigate, click, type, scroll, get_content, evaluate_js, tabs, run_command, read/write/list
-- Starter pack: 6 agents (job_hunter, deal_finder, inbox_triage, social_poster, researcher, morning_digest)
+- Tools the agent has: screenshot, navigate, click, type, scroll, get_content, tabs, run_command, read/write/list
+- Starter pack: 12 agents (job_hunter, deal_finder, inbox_triage, morning_digest, researcher, social_poster, lead_tracker, meeting_prep, support_triage, invoice_collector, marketplace_monitor, web_runner) + "➕ Build your own" factory for custom agents (HubSpot, LinkedIn, Instagram, …)
 - Hard cap per task: 6 tool calls before asking the user to confirm continuation
 - History retention: last 20 turns per agent chat
 - Privacy surface: ws://127.0.0.1:8765 (local), AI provider (yours), Telegram (yours). Nothing else.

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Changelog — CtxAnt</title>
+<meta name="description" content="What shipped recently in CtxAnt across the public site, local app, and agent experience." />
+<link rel="icon" href="/assets/favicon.png" />
+<link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body data-page="changelog">
+<div id="site-shell"></div>
+
+<main class="page-shell release-shell">
+  <section class="page-section">
+    <div class="shell release-hero">
+      <article class="release-card" data-reveal>
+        <div class="release-kicker">Product changelog</div>
+        <h1>What shipped recently in CtxAnt.</h1>
+        <p class="lede">A cleaner release feed for the marketing site, the app surface, and the agent experience. Newest work lands first.</p>
+        <div class="release-stats" id="release-stats">
+          <div class="release-stat"><strong>—</strong><span>Latest entry</span></div>
+          <div class="release-stat"><strong>—</strong><span>Total entries</span></div>
+          <div class="release-stat"><strong>—</strong><span>Current focus</span></div>
+        </div>
+      </article>
+      <article class="release-card" data-reveal>
+        <div class="eyebrow">How to read this page</div>
+        <div class="detail-list spacious">
+          <div class="item">Top entry is the freshest public-facing work.</div>
+          <div class="item">Stable releases and current main-branch product work can both appear.</div>
+          <div class="item">Internal refactors are omitted unless they change what users feel.</div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="shell release-stack" id="releases">
+      <div class="release-empty">Loading changelog…</div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="/assets/site.js"></script>
+<script>
+  const releasesEl = document.getElementById('releases');
+  const statsEl = document.getElementById('release-stats');
+
+  function esc(s) {
+    if (s == null) return '';
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function renderStats(releases) {
+    const latest = releases[0];
+    statsEl.innerHTML = `
+      <div class="release-stat release-stat--number">
+        <div class="stat-value">${esc(latest ? latest.version : '—')}</div>
+        <div class="stat-label">Latest entry</div>
+      </div>
+      <div class="release-stat release-stat--number">
+        <div class="stat-value">${esc(String(releases.length))}</div>
+        <div class="stat-label">Total entries</div>
+      </div>
+      <div class="release-stat release-stat--feature">
+        <div class="stat-label">Current focus</div>
+        <h3 class="stat-title">${esc(latest ? latest.title : '—')}</h3>
+        <div class="stat-copy">${esc(latest ? latest.summary : 'No release notes yet.')}</div>
+      </div>
+    `;
+  }
+
+  fetch('/changelog/releases.json')
+    .then(r => r.json())
+    .then(releases => {
+      renderStats(releases);
+      releasesEl.innerHTML = releases.map(release => `
+        <article class="release-entry content-card" data-reveal>
+          <div class="topline">
+            <div class="release-header">
+              <div class="release-meta">${esc(release.version)}</div>
+              <h3>${esc(release.title)}</h3>
+              <div class="date">${esc(release.date)}</div>
+            </div>
+            <span class="label">${esc(release.status || 'Update')}</span>
+          </div>
+          <p class="text-lead release-summary">${esc(release.summary || '')}</p>
+          <div class="release-columns spacious">
+            ${(release.sections || []).map(section => `
+              <section class="release-group">
+                <h4>${esc(section.title)}</h4>
+                <div class="release-items">
+                  ${(section.items || []).map(item => `<div class="release-item">${esc(item)}</div>`).join('')}
+                </div>
+              </section>
+            `).join('')}
+          </div>
+        </article>
+      `).join('');
+      document.dispatchEvent(new Event('ctxant:refresh-reveal'));
+    })
+    .catch(() => {
+      releasesEl.innerHTML = '<div class="release-empty">Failed to load the changelog.</div>';
+    });
+</script>
+</body>
+</html>
